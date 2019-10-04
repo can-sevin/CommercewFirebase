@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "842682541091",
+    "firebase_url": "https://ticaret-b3a02.firebaseio.com",
+    "project_id": "ticaret-b3a02",
+    "storage_bucket": "ticaret-b3a02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842682541091:android:99ad43466e70b16fb6fd96",
+        "android_client_info": {
+          "package_name": "com.canblack.commercewfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842682541091-87oevp0u2vgmnae30of095j6727lb14v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.canblack.commercewfirebase",
+            "certificate_hash": "11f4a0594583d8d2ac8048c9026c0c4d8fa97f38"
+          }
+        },
+        {
+          "client_id": "842682541091-9prl212gohk7ui0let432dg3nhgondlf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtL7osxJmBQzKAeKziqRaVMAVV8OX50Ec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842682541091-9prl212gohk7ui0let432dg3nhgondlf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
