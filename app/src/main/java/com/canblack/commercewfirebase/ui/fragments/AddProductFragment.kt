@@ -15,11 +15,15 @@ import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.AdapterCategory
 import com.canblack.commercewfirebase.ui.Category
 import com.canblack.commercewfirebase.ui.MainActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import java.util.*
 
-class AddProductFragment : Fragment() {
+class AddProductFragment(user: FirebaseUser) : Fragment() {
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -37,7 +41,14 @@ class AddProductFragment : Fragment() {
         val btn_add = addProductView.findViewById<Button>(R.id.btn_add)
 
         btn_back.setOnClickListener {
-
+            auth.signOut()
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, LoginFragment()).commit()
         }
 
 
@@ -73,9 +84,6 @@ class AddProductFragment : Fragment() {
                 (activity as MainActivity).AddProduct(name,quantity,desc,cat,price,productKey)
             }
         }
-
-
-
         return addProductView
     }
 /*

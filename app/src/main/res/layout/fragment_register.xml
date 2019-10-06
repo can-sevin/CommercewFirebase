@@ -82,7 +82,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:inputType="phone"
-                android:hint="Email"
+                android:hint="Phone"
                 android:paddingLeft="64dp"
                 android:id="@+id/edt_res_phone"
                 android:layout_width="match_parent"

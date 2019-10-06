@@ -10,8 +10,13 @@ import android.widget.EditText
 import android.widget.TextView
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.MainActivity
+import com.google.firebase.database.*
 
 class LoginFragment : Fragment() {
+
+    private lateinit var productRef: DatabaseReference
+    var database = FirebaseDatabase.getInstance()
+    var adminRef = database.getReference("Admin")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,17 @@ class LoginFragment : Fragment() {
         val btn_register = viewLogin.findViewById<Button>(R.id.btn_register)
         val btn_log = viewLogin.findViewById<Button>(R.id.btn_log)
         val txt_forgot = viewLogin.findViewById<TextView>(R.id.txt_forgot)
+        val txt_admin = viewLogin.findViewById<TextView>(R.id.txt_admin)
+
+        txt_admin.setOnClickListener {
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, AdminFragment()).commit()
+        }
 
         btn_log.setOnClickListener {
             (activity as MainActivity).Login(edt_email.text.toString(),edt_pass.text.toString())

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    app:cardCornerRadius="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Deneme"
+                android:id="@+id/txt_new_name"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/opensans"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp"
+                android:textSize="6sp"
+                android:layout_height="wrap_content"
+                android:textColor="#000" />
+            <TextView
+                android:text="600TL"
+                android:gravity="right"
+                android:id="@+id/txt_new_price"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/opensans"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp"
+                android:textSize="6sp"
+                android:layout_height="wrap_content"
+                android:textColor="#000" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/img_new_product"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+

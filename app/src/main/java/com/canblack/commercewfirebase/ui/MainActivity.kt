@@ -5,10 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.storage.StorageManager
 import android.widget.Toast
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.fragments.AddProductFragment
+import com.canblack.commercewfirebase.ui.fragments.HomeFragment
 import com.canblack.commercewfirebase.ui.fragments.LoginFragment
 import com.google.android.gms.tasks.*
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add_product.*
 import java.lang.Exception
+import com.google.firebase.database.DataSnapshot
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var filePath: StorageReference
     private lateinit var productRef: DatabaseReference
     var database = FirebaseDatabase.getInstance()
-    var myRef = database.getReference("users")
+    var myRef = database.getReference("Users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +58,45 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
-                } else {
+                    var adminRef = FirebaseDatabase.getInstance().getReference("Admin")
+                    var userRef = FirebaseDatabase.getInstance().getReference("Users")
+                    userRef.addListenerForSingleValueEvent(object:ValueEventListener{
+                        override fun onCancelled(p0: DatabaseError) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+                        override fun onDataChange(p0: DataSnapshot) {
+                            for (data in p0.getChildren()) {
+                                val manager = supportFragmentManager
+                                val transaction = manager.beginTransaction()
+                                transaction.setCustomAnimations(
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
+                                )
+                                if (data.child("email").getValue() == email) {
+                                    transaction.replace(R.id.main_frame, HomeFragment(user!!)).commit()
+                                }
+                            }
+                    }
+                })
+                    adminRef.addListenerForSingleValueEvent(object:ValueEventListener{
+                        override fun onCancelled(p0: DatabaseError) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+                        override fun onDataChange(p0: DataSnapshot) {
+                            for (data in p0.getChildren()) {
+                                val manager = supportFragmentManager
+                                val transaction = manager.beginTransaction()
+                                transaction.setCustomAnimations(
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
+                                )
+                                if (data.child("email").getValue() == email) {
+                                    transaction.replace(R.id.main_frame, AddProductFragment(user!!)).commit()
+                                }
+                            }
+                        }
+                    })
+                }else{
                     // If sign in fails, display a message to the user.
                     Toast.makeText(this, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
@@ -86,14 +125,14 @@ class MainActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val user = auth.currentUser
                     val manager = supportFragmentManager
                     val transaction = manager.beginTransaction()
                     transaction.setCustomAnimations(
                         R.anim.fade_in,
                         R.anim.fade_out
                     )
-                    transaction.add(R.id.main_frame, AddProductFragment()).commit()
-                    val user = auth.currentUser
+                    transaction.replace(R.id.main_frame, AddProductFragment(user!!)).commit()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -110,18 +149,27 @@ class MainActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
             override fun onDataChange(p0: DataSnapshot) {
-                if(!(p0.child("Admin").child("phone").exists()) && !(p0.child("Admin").child("email").exists())){
+                val idemail = email.replace(".", ",")
+                if(!(p0.child("Admin").child(idemail).exists())){
                     val userHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
                     userHashMap.put("phone",tel)
                     userHashMap.put("password",pass)
                     userHashMap.put("name",name)
                     userHashMap.put("email",email)
-                    myRef.child("Admin").child("phone").updateChildren(userHashMap)
+                    myRef.child("Admin").child(idemail).updateChildren(userHashMap)
                         .addOnCompleteListener(object : OnCompleteListener<Void>{
                             override fun onComplete(p0: Task<Void>) {
                                 if(p0.isSuccessful){
                                     Toast.makeText(baseContext, "Tebrikler Hesabınız oluşturuldu",
                                         Toast.LENGTH_SHORT).show()
+                                    val manager = supportFragmentManager
+                                    val transaction = manager.beginTransaction()
+                                    transaction.setCustomAnimations(
+                                        R.anim.fade_in,
+                                        R.anim.fade_out
+                                    )
+                                    transaction.replace(R.id.main_frame, LoginFragment()).commit()
+                                    val user = auth.currentUser
                                 }
                             }
                         })
@@ -137,17 +185,18 @@ class MainActivity : AppCompatActivity() {
     {
         myRef = FirebaseDatabase.getInstance().getReference()
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            val idemail = email.replace(".", ",")
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
             override fun onDataChange(p0: DataSnapshot) {
-                    if(!(p0.child("Users").child("phone").exists()) && !(p0.child("Users").child("email").exists())){
+                    if(!(p0.child("Users").child(idemail).exists())){
                         val userHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
                         userHashMap.put("phone",tel)
                         userHashMap.put("password",pass)
                         userHashMap.put("name",name)
                         userHashMap.put("email",email)
-                        myRef.child("Users").child("phone").updateChildren(userHashMap)
+                        myRef.child("Users").child(idemail).updateChildren(userHashMap)
                             .addOnCompleteListener(object : OnCompleteListener<Void>{
                                 override fun onComplete(p0: Task<Void>) {
                                     if(p0.isSuccessful){
@@ -250,7 +299,7 @@ class MainActivity : AppCompatActivity() {
 
         if(requestCode == 1 && resultCode == Activity.RESULT_OK && data!=null){
             ImageUri = data.data!!
-            btn_add.setText("Image Added")
+            btn_add_img.setText("Image Added")
         }
     }
 }
