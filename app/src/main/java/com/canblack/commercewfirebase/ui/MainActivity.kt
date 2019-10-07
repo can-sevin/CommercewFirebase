@@ -5,11 +5,19 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.fragments.AddProductFragment
 import com.canblack.commercewfirebase.ui.fragments.HomeFragment
 import com.canblack.commercewfirebase.ui.fragments.LoginFragment
+import com.canblack.commercewfirebase.ui.fragments.ProductVH
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.android.gms.tasks.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -19,23 +27,25 @@ import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add_product.*
 import java.lang.Exception
 import com.google.firebase.database.DataSnapshot
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth
-    private lateinit var ImageUri:Uri
-    private lateinit var filePath: StorageReference
-    private lateinit var productRef: DatabaseReference
+    lateinit var auth: FirebaseAuth
+    lateinit var ImageUri:Uri
+    lateinit var downloadImageUrl:String
+    var productData = FirebaseDatabase.getInstance().getReference("Products")
+    var productImageRef: StorageReference = FirebaseStorage.getInstance().reference.child("Product Images")
+    lateinit var productRef: DatabaseReference
     var database = FirebaseDatabase.getInstance()
     var myRef = database.getReference("Users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         auth = FirebaseAuth.getInstance()
         productRef = FirebaseDatabase.getInstance().getReference().child("Products")
         val currentUser = auth.currentUser
-
         if(savedInstanceState == null){
             val manager = supportFragmentManager
             val transaction = manager.beginTransaction()
@@ -47,11 +57,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        auth.signOut()
-    }
+    data class Products(val name:String = "", val price:Double = 0.0, val image:String = "")
 
+    fun RecyclerNew(){
+        val re_new = findViewById<RecyclerView>(R.id.recycler_new)
+
+        val options = FirebaseRecyclerOptions.Builder<Products>()
+            .setQuery(productData,Products::class.java)
+            .setLifecycleOwner(this)
+            .build()
+
+       val recyclerAdapter = object : FirebaseRecyclerAdapter<Products, ProductVH>(options) {
+            override fun onCreateViewHolder(
+                parent: ViewGroup,
+                viewType: Int
+            ): ProductVH {
+                val homeRecyclerView = LayoutInflater.from(parent.context).inflate(R.layout.item_new,parent,false)
+                return ProductVH(homeRecyclerView)
+            }
+
+            override fun onBindViewHolder(
+                p0: ProductVH,
+                p1: Int,
+                p2: Products
+            ) {
+                p0.txtProductName.text = p2.name
+                p0.txtProductDesc.text = p2.price.toString()+"TL"
+                Picasso.get().load(p2.image).into(p0.imageView)
+            }
+        }
+        re_new.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        re_new.adapter = recyclerAdapter
+        re_new.setHasFixedSize(true)
+        (recyclerAdapter as FirebaseRecyclerAdapter<Products, ProductVH>).startListening()
+    }
     fun Login(email:String,pass:String){
         auth.signInWithEmailAndPassword(email,pass)
             .addOnCompleteListener(this) { task ->
@@ -91,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                                     R.anim.fade_out
                                 )
                                 if (data.child("email").getValue() == email) {
-                                    transaction.replace(R.id.main_frame, AddProductFragment(user!!)).commit()
+                                    transaction.replace(R.id.main_frame, AddProductFragment(user!!,auth)).commit()
                                 }
                             }
                         }
@@ -132,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                         R.anim.fade_in,
                         R.anim.fade_out
                     )
-                    transaction.replace(R.id.main_frame, AddProductFragment(user!!)).commit()
+                    transaction.replace(R.id.main_frame, AddProductFragment(user!!,auth)).commit()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -212,6 +251,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+
     fun Forgot(email:String){
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
@@ -225,6 +266,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+
     fun OpenGallery(){
         val galleryintent = Intent()
         galleryintent.setAction(Intent.ACTION_GET_CONTENT)
@@ -232,16 +274,14 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(galleryintent,1)
     }
 
-    fun AddProduct(p_name:String,p_quantity:Int,p_desc:String,p_cat:String,p_price:Float,productKey:String){
+    fun AddProduct(p_name:String,p_quantity:Int,p_desc:String,p_cat:String,p_price:Double,productKey:String){
+        var filePath: StorageReference
         if(ImageUri.toString().isEmpty()){
             Toast.makeText(baseContext, "You must install product image",
                 Toast.LENGTH_SHORT).show()
         }else{
-            filePath = FirebaseStorage.getInstance().getReference().child("Product Images")
-                .child(ImageUri.lastPathSegment + productKey+".jpg")
-
-            val uploadTask = filePath.putFile(ImageUri)
-
+            filePath = productImageRef.child(ImageUri.lastPathSegment+ productKey +".jpg")
+            var uploadTask = filePath.putFile(ImageUri)
             uploadTask.addOnFailureListener(object:OnFailureListener{
                 override fun onFailure(p0: Exception) {
                     Toast.makeText(baseContext, "Image install process is failure",
@@ -251,14 +291,12 @@ class MainActivity : AppCompatActivity() {
                 override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
                     Toast.makeText(baseContext, "Image install process is success",
                         Toast.LENGTH_SHORT).show()
-
-                    val urlTask = uploadTask.continueWithTask(object : Continuation<UploadTask.TaskSnapshot, Task<Uri>> {
+                        val urlTask = uploadTask.continueWithTask(object : Continuation<UploadTask.TaskSnapshot, Task<Uri>> {
                         override fun then(p0: Task<UploadTask.TaskSnapshot>): Task<Uri> {
                             if(!p0.isSuccessful){
                                 throw p0.exception!!
                             }
-
-                            val downloadImageUrl = filePath.downloadUrl.toString()
+                            downloadImageUrl = filePath.toString()
                             return filePath.downloadUrl
                         }
                     }).addOnCompleteListener(object : OnCompleteListener<Uri>{
@@ -270,6 +308,7 @@ class MainActivity : AppCompatActivity() {
                                         productHashMap.put("pid",productKey)
                                         productHashMap.put("name",p_name)
                                         productHashMap.put("desc",p_desc)
+                                        productHashMap.put("image",p0.result.toString())
                                         productHashMap.put("cat",p_cat)
                                         productHashMap.put("quantity",p_quantity)
                                         productHashMap.put("price",p_price)
@@ -293,10 +332,8 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if(requestCode == 1 && resultCode == Activity.RESULT_OK && data!=null){
             ImageUri = data.data!!
             btn_add_img.setText("Image Added")

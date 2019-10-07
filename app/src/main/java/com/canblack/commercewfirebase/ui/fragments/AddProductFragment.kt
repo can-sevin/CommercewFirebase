@@ -19,12 +19,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import java.util.*
 
-class AddProductFragment(user: FirebaseUser) : Fragment() {
-    private lateinit var auth: FirebaseAuth
+class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
+
+    var adminauth = auth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +43,7 @@ class AddProductFragment(user: FirebaseUser) : Fragment() {
         val btn_add = addProductView.findViewById<Button>(R.id.btn_add)
 
         btn_back.setOnClickListener {
-            auth.signOut()
+            adminauth.signOut()
             val manager = activity!!.supportFragmentManager
             val transaction = manager.beginTransaction()
             transaction.setCustomAnimations(
@@ -55,6 +57,7 @@ class AddProductFragment(user: FirebaseUser) : Fragment() {
         btn_img.setOnClickListener {
             (activity as MainActivity).OpenGallery()
         }
+
         /*recycler.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         recycler.adapter = AdapterCategory(getModel())
         */
@@ -69,7 +72,7 @@ class AddProductFragment(user: FirebaseUser) : Fragment() {
                 val quantity = edt_quantity.text.toString().toInt()
                 val desc = edt_desc.text.toString()
                 val cat = edt_cat.text.toString()
-                val price = edt_price.text.toString().toFloat()
+                val price = edt_price.text.toString().toDouble()
                 val calendar = Calendar.getInstance()
                 var currentDate = "non"
                 var currentTime = "non"
