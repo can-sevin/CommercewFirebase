@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso
 
 class AdapterProduct(val ProductList:MutableList<Product>):RecyclerView.Adapter<AdapterProduct.ModelViewHolder>(){
 
-    data class Product (val name:String,val price:String,val image:String)
+    data class Product (var name:String,var price:String,var image:String)
 
     class ModelViewHolder(productview: View) : RecyclerView.ViewHolder(productview) {
         var listner: ItemClickListener? = null

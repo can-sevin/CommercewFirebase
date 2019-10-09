@@ -43,7 +43,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         val viewHome = inflater.inflate(R.layout.fragment_home, container, false)
         val re_cat = viewHome.findViewById<RecyclerView>(R.id.recycler_cat)
         val re_new = viewHome.findViewById<RecyclerView>(R.id.recycler_new)
-        val img = viewHome.findViewById<CircleImageView>(R.id.home_image)
+        val img = viewHome.findViewById<CircleImageView>(R.id.profile_image)
         val btn_logout = viewHome.findViewById<ImageView>(R.id.btn_home_back)
         val txt_welcome = viewHome.findViewById<TextView>(R.id.txt_welcome)
         re_new.setHasFixedSize(true)
@@ -57,6 +57,17 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             .setQuery(productRef,Products::class.java)
             .setLifecycleOwner(this)
             .build()
+
+        img.setOnClickListener {
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, ProfileFragment(homeUser)).commit()
+        }
+
 
         val recyclerAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(options) {
             override fun onCreateViewHolder(

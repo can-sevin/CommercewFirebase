@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.android.gms.tasks.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -27,12 +29,20 @@ import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add_product.*
 import java.lang.Exception
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.storage.StorageTask
 import com.squareup.picasso.Picasso
+import com.theartofdev.edmodo.cropper.CropImage
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
-    lateinit var ImageUri:Uri
+    lateinit var user : FirebaseUser
+    var storageProfilePicture = FirebaseStorage.getInstance().reference.child("Users Picture")
+    lateinit var imageUri:Uri
+    lateinit var myUrl:String
+    private lateinit var uploadTask:UploadTask
     lateinit var downloadImageUrl:String
     var productData = FirebaseDatabase.getInstance().getReference("Products")
     var productImageRef: StorageReference = FirebaseStorage.getInstance().reference.child("Product Images")
@@ -44,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
-        productRef = FirebaseDatabase.getInstance().getReference().child("Products")
+        productRef = FirebaseDatabase.getInstance().reference.child("Products")
         val currentUser = auth.currentUser
         if(savedInstanceState == null){
             val manager = supportFragmentManager
@@ -96,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
+                    user = auth.currentUser!!
                     var adminRef = FirebaseDatabase.getInstance().getReference("Admin")
                     var userRef = FirebaseDatabase.getInstance().getReference("Users")
                     userRef.addListenerForSingleValueEvent(object:ValueEventListener{
@@ -104,15 +114,15 @@ class MainActivity : AppCompatActivity() {
                             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         }
                         override fun onDataChange(p0: DataSnapshot) {
-                            for (data in p0.getChildren()) {
+                            for (data in p0.children) {
                                 val manager = supportFragmentManager
                                 val transaction = manager.beginTransaction()
                                 transaction.setCustomAnimations(
                                     R.anim.fade_in,
                                     R.anim.fade_out
                                 )
-                                if (data.child("email").getValue() == email) {
-                                    transaction.replace(R.id.main_frame, HomeFragment(user!!)).commit()
+                                if (data.child("email").value == email) {
+                                    transaction.replace(R.id.main_frame, HomeFragment(user)).commit()
                                 }
                             }
                     }
@@ -122,15 +132,15 @@ class MainActivity : AppCompatActivity() {
                             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         }
                         override fun onDataChange(p0: DataSnapshot) {
-                            for (data in p0.getChildren()) {
+                            for (data in p0.children) {
                                 val manager = supportFragmentManager
                                 val transaction = manager.beginTransaction()
                                 transaction.setCustomAnimations(
                                     R.anim.fade_in,
                                     R.anim.fade_out
                                 )
-                                if (data.child("email").getValue() == email) {
-                                    transaction.replace(R.id.main_frame, AddProductFragment(user!!,auth)).commit()
+                                if (data.child("email").value == email) {
+                                    transaction.replace(R.id.main_frame, AddProductFragment(user,auth)).commit()
                                 }
                             }
                         }
@@ -182,7 +192,7 @@ class MainActivity : AppCompatActivity() {
 
     fun AdminValidatePhone(name:String,tel:String,pass:String,email:String)
     {
-        myRef = FirebaseDatabase.getInstance().getReference()
+        myRef = FirebaseDatabase.getInstance().reference
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -222,7 +232,7 @@ class MainActivity : AppCompatActivity() {
 
     fun ValidatePhone(name:String,tel:String,pass:String,email:String)
     {
-        myRef = FirebaseDatabase.getInstance().getReference()
+        myRef = FirebaseDatabase.getInstance().reference
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             val idemail = email.replace(".", ",")
             override fun onCancelled(p0: DatabaseError) {
@@ -269,19 +279,19 @@ class MainActivity : AppCompatActivity() {
 
     fun OpenGallery(){
         val galleryintent = Intent()
-        galleryintent.setAction(Intent.ACTION_GET_CONTENT)
-        galleryintent.setType("image/*")
+        galleryintent.action = Intent.ACTION_GET_CONTENT
+        galleryintent.type = "image/*"
         startActivityForResult(galleryintent,1)
     }
 
     fun AddProduct(p_name:String,p_quantity:Int,p_desc:String,p_cat:String,p_price:Double,productKey:String){
         var filePath: StorageReference
-        if(ImageUri.toString().isEmpty()){
+        if(imageUri.toString().isEmpty()){
             Toast.makeText(baseContext, "You must install product image",
                 Toast.LENGTH_SHORT).show()
         }else{
-            filePath = productImageRef.child(ImageUri.lastPathSegment+ productKey +".jpg")
-            var uploadTask = filePath.putFile(ImageUri)
+            filePath = productImageRef.child(imageUri.lastPathSegment+ productKey +".jpg")
+            var uploadTask = filePath.putFile(imageUri)
             uploadTask.addOnFailureListener(object:OnFailureListener{
                 override fun onFailure(p0: Exception) {
                     Toast.makeText(baseContext, "Image install process is failure",
@@ -332,11 +342,86 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
+
+
+    fun uploadImageProfile(edtName: EditText?, edtEmail: EditText?, edtPass: EditText?, edtPhone: EditText?, img: CircleImageView?){
+        val fileRef = storageProfilePicture.child(user.email.toString().replace(".",",")+".jpg")
+        uploadTask = fileRef.putFile(imageUri)
+        val manager = this.supportFragmentManager
+        val transaction = manager.beginTransaction()
+
+        uploadTask.continueWithTask(object : Continuation <UploadTask.TaskSnapshot, Task<Uri>>{
+
+            override fun then(p0: Task<UploadTask.TaskSnapshot>): Task<Uri> {
+                if(!p0.isSuccessful){
+                    throw p0.exception!!
+                }
+
+                return fileRef.downloadUrl
+            }
+        })
+            .addOnCompleteListener(object : OnCompleteListener<Uri> {
+
+                override fun onComplete(p0: Task<Uri>) {
+                    if(p0.isSuccessful){
+                        var downloadUrl = p0.result
+                        myUrl = downloadUrl.toString()
+
+                        var userref = FirebaseDatabase.getInstance().reference.child("Users")
+
+                        val userrHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
+                        userrHashMap.put("phone",edtPhone!!.text.toString())
+                        userrHashMap.put("password",edtPass!!.text.toString())
+                        userrHashMap.put("name",edtName!!.text.toString())
+                        userrHashMap.put("email",edtEmail!!.text.toString())
+                        userrHashMap.put("image",myUrl)
+                        userref.child(user.email!!.replace(".",",")).updateChildren(userrHashMap)
+
+                        transaction.setCustomAnimations(
+                            R.anim.fade_in,
+                            R.anim.fade_out
+                        )
+                        transaction.replace(R.id.main_frame, LoginFragment()).commit()
+                        Toast.makeText(this@MainActivity, "Profile info updated success",
+                            Toast.LENGTH_SHORT).show()
+                        finish()
+                    }else{
+                        Toast.makeText(this@MainActivity, "Error info update",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+    }
+
+    fun CropImage(){
+        CropImage.activity(imageUri)
+            .setAspectRatio(1,1)
+            .start(this)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if(requestCode == 1 && resultCode == Activity.RESULT_OK && data!=null){
-            ImageUri = data.data!!
-            btn_add_img.setText("Image Added")
+            imageUri = data.data!!
+            btn_add_img.text = "Image Added"
+        }
+
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data!=null){
+            var result = CropImage.getActivityResult(data)
+            imageUri = result.uri
+
+            setting_profile_image.setImageURI(imageUri)
+        } else {
+            Toast.makeText(this, "Error,Try Again",
+                Toast.LENGTH_SHORT).show()
+            val manager = this.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, HomeFragment(user)).commit()
         }
     }
 }

@@ -1,3 +1,3 @@
 package com.canblack.commercewfirebase.ui
 
-data class Category (val name:String)
+data class Category (var name:String)
