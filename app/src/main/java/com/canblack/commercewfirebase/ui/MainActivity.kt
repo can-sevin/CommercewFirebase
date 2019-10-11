@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    data class Products(val name:String = "", val price:Double = 0.0, val image:String = "")
+    //data class Products(val name:String = "", val price:Double = 0.0, val image:String = "",val desc:String = "",val cat:String = "",val pid:String = "",val quantity:Int = 0)
 
     fun RecyclerNew(){
         val re_new = findViewById<RecyclerView>(R.id.recycler_new)

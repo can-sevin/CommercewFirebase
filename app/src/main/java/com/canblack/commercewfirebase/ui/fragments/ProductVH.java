@@ -22,7 +22,6 @@ public class ProductVH extends RecyclerView.ViewHolder implements View.OnClickLi
         imageView = itemView.findViewById(R.id.img_new_product);
         txtProductName = itemView.findViewById(R.id.txt_new_name);
         txtProductDesc = itemView.findViewById(R.id.txt_new_price);
-
     }
 
     public void setItemClickListener(ItemClickListener listner){

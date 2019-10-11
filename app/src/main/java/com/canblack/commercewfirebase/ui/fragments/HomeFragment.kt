@@ -30,6 +30,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
     var productRef:DatabaseReference = FirebaseDatabase.getInstance().reference.child("Products")
     var database = FirebaseDatabase.getInstance().getReference("Users")
     private var homeUser = user
+    lateinit var model:Products
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +71,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
 
 
         val recyclerAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(options) {
+
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int
@@ -90,6 +92,16 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                         p0.txtProductName.text = p2.name
                         p0.txtProductDesc.text = p2.price.toString() + "TL"
                         Picasso.get().load(p2.image).into(p0.imageView)
+
+                        p0.itemView.setOnClickListener {
+                            val manager = activity!!.supportFragmentManager
+                            val transaction = manager.beginTransaction()
+                            transaction.setCustomAnimations(
+                                R.anim.fade_in,
+                                R.anim.fade_out
+                            )
+                            transaction.replace(R.id.main_frame, ProductFragment(p2.name,p2.price,p2.image,p2.desc,p2.cat,p2.pid,p2.quantity,homeUser)).commit()
+                        }
                     }
 
                     override fun onCancelled(p0: DatabaseError) {
@@ -119,6 +131,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                     }
                 }
             })
+
         btn_logout.setOnClickListener {
             auth.signOut()
             val manager = activity!!.supportFragmentManager
@@ -143,4 +156,5 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         )
         return catmodels
     }
+
 }
