@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             .setLifecycleOwner(this)
             .build()
 
+
        val recyclerAdapter = object : FirebaseRecyclerAdapter<Products, ProductVH>(options) {
             override fun onCreateViewHolder(
                 parent: ViewGroup,

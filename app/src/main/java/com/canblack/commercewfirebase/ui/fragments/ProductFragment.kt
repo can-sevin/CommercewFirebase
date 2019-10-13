@@ -16,7 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_cart.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -28,6 +29,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
     val productUser = user
     val pdesc = desc
     val pcat = cat
+    var state = "Normal"
     val ppid = pid
     var pquantity = quantity
     val cartListRef = FirebaseDatabase.getInstance().reference.child("Card List")
@@ -56,11 +58,17 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
         pquantity = quantity.number.toInt()
 
-
         btn_basket.setOnClickListener {
             addingToCardList()
-        }
 
+            if(state.equals("Order Placed") || state.equals("Order Shipped"))
+            {
+                Toast.makeText(context, "Your Order is shipped",
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                addingToCardList()
+            }
+        }
         return viewProduct
     }
 
@@ -105,4 +113,35 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
                 }
             })
     }
+
+    override fun onStart() {
+        super.onStart()
+        CheckOrderState()
+    }
+
+
+    fun CheckOrderState(){
+        val ordersRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Orders")
+            .child(productUser.email!!.replace(".",","))
+
+        ordersRef.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    val shippingState = p0.child("state").value.toString()
+
+                    if(shippingState == "shipped"){
+                        state = "Order Shipped"
+                    }
+                    else if(shippingState == "not shipped"){
+                        state = "Order Placed"
+                    }
+                }
+            }
+        })
+    }
+
 }
