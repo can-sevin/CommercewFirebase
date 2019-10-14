@@ -38,6 +38,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
     }
 
     override fun onCreateView(
