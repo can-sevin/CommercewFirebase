@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                                 if (data.child("email").value == email) {
                                     Thread.sleep(2000L)
                                     progressLogin.dismiss()
-                                    transaction.replace(R.id.main_frame, HomeFragment(user)).commit()
+                                    transaction.replace(R.id.main_frame, HomeFragment(user)).addToBackStack(null).commit()
                                 }
                             }
                     }
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 if (data.child("email").value == email) {
                                     progressLogin.dismiss()
-                                    transaction.replace(R.id.main_frame, AddProductFragment(user,auth)).commit()
+                                    transaction.replace(R.id.main_frame, AddProductFragment(user,auth)).addToBackStack(null).commit()
                                 }
                             }
                         }

@@ -29,7 +29,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
     var re_cart : RecyclerView? = null
     var re_layout = LinearLayoutManager(context)
     lateinit var btn_next : Button
-    var totalPrice:Int? = 0
+    var totalPrice = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame,ConfirmFragment(totalPrice!!)).commit()
+            transaction.replace(R.id.main_frame,ConfirmFragment(totalPrice)).commit()
         }
 
         CheckOrderState()
@@ -73,7 +73,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
                 p0.txt_name.text = p2.pname
                 p0.txt_price.text = "Price:"+p2.price
                 val oneProductPrice = p2.price * p2.quantity
-                totalPrice!!.plus(oneProductPrice)
+                totalPrice += oneProductPrice
 
                 p0.itemView.setOnClickListener {
                     options = arrayOf("Edit", "Remove")
@@ -108,15 +108,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
             }
         }
         re_cart!!.adapter = adapter
-        val sayi= adapter.itemCount
-        Toast.makeText(
-            activity,
-            "" + sayi,
-            Toast.LENGTH_LONG
-        ).show()
-        txt_total_price.setText("Total Price:" + totalPrice)
         adapter.startListening()
-
         return viewCart
     }
 

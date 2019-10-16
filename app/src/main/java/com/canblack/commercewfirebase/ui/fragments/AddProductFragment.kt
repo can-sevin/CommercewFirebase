@@ -8,12 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.AdapterCategory
-import com.canblack.commercewfirebase.ui.Category
 import com.canblack.commercewfirebase.ui.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -43,14 +40,25 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
         val btn_add = addProductView.findViewById<Button>(R.id.btn_add)
 
         btn_back.setOnClickListener {
-            adminauth.signOut()
-            val manager = activity!!.supportFragmentManager
-            val transaction = manager.beginTransaction()
-            transaction.setCustomAnimations(
-                R.anim.fade_in,
-                R.anim.fade_out
-            )
-            transaction.replace(R.id.main_frame, LoginFragment()).commit()
+            val builder = AlertDialog.Builder(this.context!!)
+            builder.setTitle("Logout?")
+            builder.setMessage("Are you want to logout?")
+            builder.setPositiveButton("YES"){dialog, which ->
+                adminauth.signOut()
+                val manager = activity!!.supportFragmentManager
+                val transaction = manager.beginTransaction()
+                transaction.setCustomAnimations(
+                    R.anim.fade_in,
+                    R.anim.fade_out
+                )
+                transaction.replace(R.id.main_frame, LoginFragment()).addToBackStack(null).commit()
+            }
+            builder.setNegativeButton("No"){dialog,which ->
+                dialog.cancel()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+
         }
 
 
