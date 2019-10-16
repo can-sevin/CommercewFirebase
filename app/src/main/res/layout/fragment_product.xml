@@ -25,7 +25,8 @@
         <androidx.cardview.widget.CardView
             app:cardBackgroundColor="#1A000000"
             app:cardCornerRadius="30dp"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="240dp"
             android:layout_height="240dp">
             <ImageView
                 android:src="@mipmap/ic_launcher"
@@ -84,6 +85,6 @@
             android:focusable="true"
             android:layout_marginRight="16dp"
             android:layout_gravity="bottom|right"
-            android:src="@drawable/ic_shopping_cart_black_24dp" />
+            android:src="@drawable/ic_add_circle_black_24dp" />
     </LinearLayout>
 </FrameLayout>

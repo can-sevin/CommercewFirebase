@@ -1,6 +1,7 @@
 package com.canblack.commercewfirebase.ui
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -8,14 +9,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.fragments.AddProductFragment
-import com.canblack.commercewfirebase.ui.fragments.HomeFragment
-import com.canblack.commercewfirebase.ui.fragments.LoginFragment
-import com.canblack.commercewfirebase.ui.fragments.ProductVH
+import com.canblack.commercewfirebase.ui.fragments.*
+import com.dd.processbutton.iml.ActionProcessButton
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.auth.api.signin.internal.Storage
@@ -34,7 +34,9 @@ import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
@@ -110,9 +112,15 @@ class MainActivity : AppCompatActivity() {
                     user = auth.currentUser!!
                     var adminRef = FirebaseDatabase.getInstance().getReference("Admin")
                     var userRef = FirebaseDatabase.getInstance().getReference("Users")
+                    val progressLogin = ProgressDialog(this)
+                    progressLogin.setTitle("Login on Process")
+                    progressLogin.setMessage("Please wait")
+                    progressLogin.setCancelable(false)
+                    progressLogin.setIndeterminate(true)
+                    progressLogin.setIndeterminateDrawable(resources.getDrawable(R.drawable.circular_back))
+                    progressLogin.show()
                     userRef.addListenerForSingleValueEvent(object:ValueEventListener{
                         override fun onCancelled(p0: DatabaseError) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         }
                         override fun onDataChange(p0: DataSnapshot) {
                             for (data in p0.children) {
@@ -123,6 +131,8 @@ class MainActivity : AppCompatActivity() {
                                     R.anim.fade_out
                                 )
                                 if (data.child("email").value == email) {
+                                    Thread.sleep(2000L)
+                                    progressLogin.dismiss()
                                     transaction.replace(R.id.main_frame, HomeFragment(user)).commit()
                                 }
                             }
@@ -141,6 +151,7 @@ class MainActivity : AppCompatActivity() {
                                     R.anim.fade_out
                                 )
                                 if (data.child("email").value == email) {
+                                    progressLogin.dismiss()
                                     transaction.replace(R.id.main_frame, AddProductFragment(user,auth)).commit()
                                 }
                             }
@@ -408,7 +419,7 @@ class MainActivity : AppCompatActivity() {
             btn_add_img.text = "Image Added"
         }
 
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data!=null){
+        /*if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data!=null){
             var result = CropImage.getActivityResult(data)
             imageUri = result.uri
 
@@ -424,5 +435,6 @@ class MainActivity : AppCompatActivity() {
             )
             transaction.replace(R.id.main_frame, HomeFragment(user)).commit()
         }
+         */
     }
 }

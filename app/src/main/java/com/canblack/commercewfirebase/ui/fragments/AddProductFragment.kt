@@ -83,7 +83,7 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
                     Toast.makeText(context, "Your phone isn't Android 7.0 :(",
                         Toast.LENGTH_SHORT).show()
                 }
-                val productKey = currentDate + currentTime
+                val productKey = currentDate+" "+ currentTime
                 (activity as MainActivity).AddProduct(name,quantity,desc,cat,price,productKey)
             }
         }

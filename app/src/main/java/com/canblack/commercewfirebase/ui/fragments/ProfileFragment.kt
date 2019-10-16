@@ -64,7 +64,7 @@ class ProfileFragment(user: FirebaseUser) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, LoginFragment()).commit()
+            transaction.replace(R.id.main_frame, HomeFragment(profileUser)).commit()
         }
 
 

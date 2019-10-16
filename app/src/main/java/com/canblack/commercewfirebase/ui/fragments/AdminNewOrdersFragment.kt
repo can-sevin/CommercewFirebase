@@ -68,6 +68,16 @@ class AdminNewOrdersFragment : Fragment() {
                 p0.userAddress.setText("Address:"+p2.address)
                 p0.userDateTime.setText("Tİme:"+p2.time)
                 p0.userTotalPrice.setText("Total:"+p2.total)
+
+                p0.btn_show.setOnClickListener {
+                    val manager = activity!!.supportFragmentManager
+                    val transaction = manager.beginTransaction()
+                    transaction.setCustomAnimations(
+                        R.anim.fade_in,
+                        R.anim.fade_out
+                    )
+                    transaction.replace(R.id.main_frame, AdminUserProductFragment()).commit()
+                }
             }
         }
 

@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_cart.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +59,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val btn_basket = viewProduct.findViewById<FloatingActionButton>(R.id.btn_add_basket)
         val quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
         pquantity = quantity.number.toInt()
-
+        Picasso.get().load(pimg).into(img)
         btn_basket.setOnClickListener {
             addingToCardList()
 
@@ -114,6 +115,8 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
                 }
             })
     }
+
+
 
     override fun onStart() {
         super.onStart()

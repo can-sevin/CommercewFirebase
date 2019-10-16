@@ -1,5 +1,6 @@
 package com.canblack.commercewfirebase.ui.fragments
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,6 +20,7 @@ import com.canblack.commercewfirebase.ui.Products
 import com.canblack.commercewfirebase.ui.User
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -43,10 +46,12 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
     ): View? {
         val viewHome = inflater.inflate(R.layout.fragment_home, container, false)
         val re_cat = viewHome.findViewById<RecyclerView>(R.id.recycler_cat)
+        val btn_basket = viewHome.findViewById<FloatingActionButton>(R.id.btn_home_add_basket)
         val re_new = viewHome.findViewById<RecyclerView>(R.id.recycler_new)
         val img = viewHome.findViewById<CircleImageView>(R.id.profile_image)
         val btn_logout = viewHome.findViewById<ImageView>(R.id.btn_home_back)
         val txt_welcome = viewHome.findViewById<TextView>(R.id.txt_welcome)
+
         re_new.setHasFixedSize(true)
         re_new.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
@@ -59,6 +64,17 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             .setLifecycleOwner(this)
             .build()
 
+
+        btn_basket.setOnClickListener {
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, CartFragment(homeUser)).addToBackStack(null).commit()
+        }
+
         img.setOnClickListener {
             val manager = activity!!.supportFragmentManager
             val transaction = manager.beginTransaction()
@@ -66,12 +82,11 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, ProfileFragment(homeUser)).commit()
+            transaction.replace(R.id.main_frame, ProfileFragment(homeUser)).addToBackStack(null).commit()
         }
 
 
         val recyclerAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(options) {
-
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int
@@ -100,7 +115,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                                 R.anim.fade_in,
                                 R.anim.fade_out
                             )
-                            transaction.replace(R.id.main_frame, ProductFragment(p2.name,p2.price,p2.image,p2.desc,p2.cat,p2.pid,p2.quantity,homeUser)).commit()
+                            transaction.replace(R.id.main_frame, ProductFragment(p2.name,p2.price,p2.image,p2.desc,p2.cat,p2.pid,p2.quantity,homeUser)).addToBackStack(null).commit()
                         }
                     }
 
@@ -133,18 +148,28 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             })
 
         btn_logout.setOnClickListener {
-            auth.signOut()
-            val manager = activity!!.supportFragmentManager
-            val transaction = manager.beginTransaction()
-            transaction.setCustomAnimations(
-                R.anim.fade_in,
-                R.anim.fade_out
-            )
-            transaction.replace(R.id.main_frame, LoginFragment()).commit()
+            val builder = AlertDialog.Builder(this.context!!)
+            builder.setTitle("Logout?")
+            builder.setMessage("Are you want to logout?")
+            builder.setPositiveButton("YES"){dialog, which ->
+                auth.signOut()
+                val manager = activity!!.supportFragmentManager
+                val transaction = manager.beginTransaction()
+                transaction.setCustomAnimations(
+                    R.anim.fade_in,
+                    R.anim.fade_out
+                )
+                transaction.replace(R.id.main_frame, LoginFragment()).commit()
+            }
+            builder.setNegativeButton("No"){dialog,which ->
+                dialog.cancel()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
         }
-
         return viewHome
     }
+
 
     //Kategoriyi Firebaseten Al!
     fun getModels(): MutableList<Category> {
