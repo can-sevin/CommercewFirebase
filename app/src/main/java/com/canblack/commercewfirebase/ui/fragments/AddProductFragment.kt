@@ -38,6 +38,18 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
         val btn_back = addProductView.findViewById<ImageView>(R.id.btn_product_logout)
         val btn_img = addProductView.findViewById<Button>(R.id.btn_add_img)
         val btn_add = addProductView.findViewById<Button>(R.id.btn_add)
+        val btn_orders = addProductView.findViewById<Button>(R.id.btn_new_orders)
+
+
+        btn_orders.setOnClickListener {
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, AdminNewOrdersFragment()).commit()
+        }
 
         btn_back.setOnClickListener {
             val builder = AlertDialog.Builder(this.context!!)
@@ -58,7 +70,6 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
             }
             val dialog: AlertDialog = builder.create()
             dialog.show()
-
         }
 
 

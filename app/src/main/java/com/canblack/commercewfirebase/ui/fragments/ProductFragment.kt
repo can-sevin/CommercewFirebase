@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
-class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:String,pid:String,quantity:Int,user:FirebaseUser) : Fragment() {
+class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:String,pid:String,user:FirebaseUser) : Fragment() {
     val pname = name
     val pprice = price
     val pimg = img
@@ -32,13 +32,13 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
     val pcat = cat
     var state = "Normal"
     val ppid = pid
-    var pquantity = quantity
+    lateinit var quantity:ElegantNumberButton
+    var pquantity:Int = 0
     val cartListRef = FirebaseDatabase.getInstance().reference.child("Card List")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
     }
 
@@ -57,12 +57,10 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
 
         val btn_like = viewProduct.findViewById<FloatingActionButton>(R.id.btn_like)
         val btn_basket = viewProduct.findViewById<FloatingActionButton>(R.id.btn_add_basket)
-        val quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
-        pquantity = quantity.number.toInt()
+        quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
         Picasso.get().load(pimg).into(img)
         btn_basket.setOnClickListener {
             addingToCardList()
-
             if(state.equals("Order Placed") || state.equals("Order Shipped"))
             {
                 Toast.makeText(context, "Your Order is shipped",
@@ -78,7 +76,9 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val calForDate = Calendar.getInstance()
         val currentDate = SimpleDateFormat("dd/MM/yyyy").format(calForDate.time)
         val currentTime = SimpleDateFormat("HH:mm:ss").format(calForDate.time)
-
+        pquantity = quantity.number.toInt()
+        Toast.makeText(context, pquantity.toString(),
+            Toast.LENGTH_SHORT).show()
         val cartMap = HashMap<String,Any>()
         cartMap.put("pname",pname)
         cartMap.put("price",pprice)
@@ -91,29 +91,25 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val idemail = productUser.email!!.replace(".", ",")
         cartListRef.child("User View").child(idemail)
             .child("Products").child(ppid).updateChildren(cartMap)
-            .addOnCompleteListener(object : OnCompleteListener<Void>{
-                override fun onComplete(p0: Task<Void>) {
-                    if(p0.isSuccessful){
-                        cartListRef.child("Admin View").child(idemail)
-                            .child("Products").child(ppid).updateChildren(cartMap)
-                            .addOnCompleteListener(object : OnCompleteListener<Void>{
-                                override fun onComplete(p0: Task<Void>) {
-                                    if(p0.isSuccessful){
-                                        Toast.makeText(context, "Product Added to Basket",
-                                            Toast.LENGTH_SHORT).show()
-                                        val manager = activity!!.supportFragmentManager
-                                        val transaction = manager.beginTransaction()
-                                        transaction.setCustomAnimations(
-                                            R.anim.fade_in,
-                                            R.anim.fade_out
-                                        )
-                                        transaction.replace(R.id.main_frame, HomeFragment(productUser)).commit()
-                                    }
-                                }
-                            })
-                    }
+            .addOnCompleteListener { p0 ->
+                if(p0.isSuccessful){
+                    cartListRef.child("Admin View").child(idemail)
+                        .child("Products").child(ppid).updateChildren(cartMap)
+                        .addOnCompleteListener { p0 ->
+                            if(p0.isSuccessful){
+                                Toast.makeText(context, "Product Added to Basket",
+                                    Toast.LENGTH_SHORT).show()
+                                val manager = activity!!.supportFragmentManager
+                                val transaction = manager.beginTransaction()
+                                transaction.setCustomAnimations(
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
+                                )
+                                transaction.replace(R.id.main_frame, HomeFragment(productUser)).commit()
+                            }
+                        }
                 }
-            })
+            }
     }
 
 
@@ -126,7 +122,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
 
     fun CheckOrderState(){
         val ordersRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Orders")
-            .child(productUser.email!!.replace(".",","))
+            .child(productUser.email!!.replace(".",",")).child(ppid)
 
         ordersRef.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
@@ -65,9 +67,75 @@ class MainActivity : AppCompatActivity() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.add(R.id.main_frame, LoginFragment()).commit()
+            transaction.add(R.id.main_frame, LoginFragment(),"Login").commit()
         }
     }
+
+    override fun onBackPressed() {
+        when {
+            supportFragmentManager.fragments.last().tag == "Login" -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Logout?")
+                builder.setMessage("Are you want to exit?")
+                builder.setPositiveButton("YES"){dialog, which ->
+                    auth.signOut()
+                    finish()
+                }
+                builder.setNegativeButton("No"){dialog,which ->
+                    dialog.cancel()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+            supportFragmentManager.fragments.last().tag == "Home" -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Logout?")
+                builder.setMessage("Are you want to logout?")
+                builder.setPositiveButton("YES"){dialog, which ->
+                    auth.signOut()
+                    finish()
+                }
+                builder.setNegativeButton("No"){dialog,which ->
+                    dialog.cancel()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+            supportFragmentManager.fragments.last().tag == "AdminHome" -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Logout?")
+                builder.setMessage("Are you want to logout?")
+                builder.setPositiveButton("YES"){dialog, which ->
+                    auth.signOut()
+                    finish()
+                }
+                builder.setNegativeButton("No"){dialog,which ->
+                    dialog.cancel()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+            supportFragmentManager.fragments.last().tag == "forgot" -> {
+                val manager = supportFragmentManager
+                val transaction = manager.beginTransaction()
+                transaction.setCustomAnimations(
+                    R.anim.fade_in,
+                    R.anim.fade_out
+                )
+                transaction.add(R.id.main_frame, LoginFragment(),"Login").commit()
+            }
+            supportFragmentManager.fragments.last().tag == "homeback" -> {
+                val manager = supportFragmentManager
+                val transaction = manager.beginTransaction()
+                transaction.setCustomAnimations(
+                    R.anim.fade_in,
+                    R.anim.fade_out
+                )
+                transaction.add(R.id.main_frame, HomeFragment(user),"Home").commit()
+            }
+        }
+    }
+
 
     //data class Products(val name:String = "", val price:Double = 0.0, val image:String = "",val desc:String = "",val cat:String = "",val pid:String = "",val quantity:Int = 0)
 
@@ -133,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                                 if (data.child("email").value == email) {
                                     Thread.sleep(2000L)
                                     progressLogin.dismiss()
-                                    transaction.replace(R.id.main_frame, HomeFragment(user)).addToBackStack(null).commit()
+                                    transaction.replace(R.id.main_frame, HomeFragment(user),"Home").commit()
                                 }
                             }
                     }
@@ -152,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 if (data.child("email").value == email) {
                                     progressLogin.dismiss()
-                                    transaction.replace(R.id.main_frame, AddProductFragment(user,auth)).addToBackStack(null).commit()
+                                    transaction.replace(R.id.main_frame, AddProductFragment(user,auth),"AdminHome").commit()
                                 }
                             }
                         }
@@ -193,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                         R.anim.fade_in,
                         R.anim.fade_out
                     )
-                    transaction.replace(R.id.main_frame, AddProductFragment(user!!,auth)).commit()
+                    transaction.replace(R.id.main_frame, AddProductFragment(user!!,auth),"AdminHome").commit()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -229,7 +297,7 @@ class MainActivity : AppCompatActivity() {
                                         R.anim.fade_in,
                                         R.anim.fade_out
                                     )
-                                    transaction.replace(R.id.main_frame, LoginFragment()).commit()
+                                    transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
                                     val user = auth.currentUser
                                 }
                             }
@@ -297,7 +365,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun AddProduct(p_name:String,p_quantity:Int,p_desc:String,p_cat:String,p_price:Double,productKey:String){
-        var filePath: StorageReference
+        val filePath: StorageReference
         if(imageUri.toString().isEmpty()){
             Toast.makeText(baseContext, "You must install product image",
                 Toast.LENGTH_SHORT).show()
@@ -393,7 +461,7 @@ class MainActivity : AppCompatActivity() {
                             R.anim.fade_in,
                             R.anim.fade_out
                         )
-                        transaction.replace(R.id.main_frame, LoginFragment()).commit()
+                        transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
                         Toast.makeText(this@MainActivity, "Profile info updated success",
                             Toast.LENGTH_SHORT).show()
                         finish()

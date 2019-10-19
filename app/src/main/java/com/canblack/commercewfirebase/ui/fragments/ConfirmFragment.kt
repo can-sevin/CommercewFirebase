@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 
 import com.canblack.commercewfirebase.R
@@ -22,15 +23,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
-class ConfirmFragment(total:Int) : Fragment() {
+class ConfirmFragment(total:Int,user:FirebaseUser) : Fragment() {
 
     lateinit var edt_name: EditText
     lateinit var edt_phone: EditText
     lateinit var edt_address: EditText
     lateinit var edt_city: EditText
     lateinit var btn_confirm: Button
+    lateinit var txt_total:TextView
     var total = total
-    lateinit var userConfirm : FirebaseUser
+    var userConfirm : FirebaseUser = user
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,9 @@ class ConfirmFragment(total:Int) : Fragment() {
         edt_address = confirmView.findViewById(R.id.edt_confirm_address)
         edt_city = confirmView.findViewById(R.id.edt_confirm_city)
         btn_confirm = confirmView.findViewById(R.id.btn_confrimm)
+        txt_total = confirmView.findViewById(R.id.txt_total_price_confirm)
 
+        txt_total.setText("Total Price: "+total.toString())
 
         btn_confirm.setOnClickListener {
 
@@ -90,12 +94,14 @@ class ConfirmFragment(total:Int) : Fragment() {
     }
 
     private fun ConfirmOrder() {
-        val calForDate = Calendar.getInstance()
-        val currentDate = SimpleDateFormat("dd/MM/yyyy").format(calForDate.time)
-        val currentTime = SimpleDateFormat("HH:mm:ss").format(calForDate.time)
 
+        val calForDate = Calendar.getInstance()
+        val currentDate = SimpleDateFormat("MM dd, yyyy").format(calForDate.time)
+        val currentTime = SimpleDateFormat("HH:mm:ss a").format(calForDate.time)
 
         val ordersRef = FirebaseDatabase.getInstance().reference.child("Orders")
+            .child(userConfirm.email!!.replace(".",","))
+            .child("$currentDate $currentTime")
         val ordersMap = HashMap<String,Any>()
         ordersMap.put("Phone",edt_phone.text.toString())
         ordersMap.put("Address",edt_address.text.toString())
@@ -111,7 +117,7 @@ class ConfirmFragment(total:Int) : Fragment() {
                     if(p0.isSuccessful){
                         FirebaseDatabase.getInstance().reference.child("Card List")
                             .child("User View")
-                            .child(userConfirm.email!!.replace(".",",0"))
+                            .child(userConfirm.email!!.replace(".",","))
                             .removeValue()
                             .addOnCompleteListener(object : OnCompleteListener<Void>{
                                 override fun onComplete(p0: Task<Void>) {
@@ -122,18 +128,12 @@ class ConfirmFragment(total:Int) : Fragment() {
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         val manager = activity!!.supportFragmentManager
-
-                                        /*
-                                            İntentlere addFlag eklenerek geri gidilmesi engelleniyor!
-                                            Fragmentdada bu yöntemi Bul!
-                                        */
-
                                         val transaction = manager.beginTransaction()
                                         transaction.setCustomAnimations(
                                             R.anim.fade_in,
                                             R.anim.fade_out
                                         )
-                                        transaction.replace(R.id.main_frame,HomeFragment(userConfirm)).commit()
+                                        transaction.replace(R.id.main_frame,HomeFragment(userConfirm),"Home").commit()
                                     }
                                 }
                             })

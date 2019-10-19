@@ -21,6 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.smarteist.autoimageslider.IndicatorAnimations
+import com.smarteist.autoimageslider.SliderAnimations
+import com.smarteist.autoimageslider.SliderView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -43,6 +46,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
     ): View? {
         val viewHome = inflater.inflate(R.layout.fragment_home, container, false)
         val re_phone = viewHome.findViewById<RecyclerView>(R.id.recycler_phone)
+        val sliderView = viewHome.findViewById<SliderView>(R.id.imageSlider)
         val btn_basket = viewHome.findViewById<FloatingActionButton>(R.id.btn_home_add_basket)
         val re_new = viewHome.findViewById<RecyclerView>(R.id.recycler_new)
         val img = viewHome.findViewById<CircleImageView>(R.id.profile_image)
@@ -54,6 +58,13 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
 
         re_phone.setHasFixedSize(true)
         re_phone.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+
+
+        sliderView.sliderAdapter = SliderAdapter(context)
+        sliderView.scrollTimeInSec = 4
+        sliderView.startAutoCycle()
+        sliderView.setIndicatorAnimation(IndicatorAnimations.SLIDE)
+        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
 
 
         val options = FirebaseRecyclerOptions.Builder<Products>()
@@ -74,7 +85,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, CartFragment(homeUser)).addToBackStack(null).commit()
+            transaction.replace(R.id.main_frame, CartFragment(homeUser),"homeback").commit()
         }
 
         img.setOnClickListener {
@@ -84,7 +95,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, ProfileFragment(homeUser)).addToBackStack(null).commit()
+            transaction.replace(R.id.main_frame, ProfileFragment(homeUser),"homeback").commit()
         }
 
         val recyclerPhoneAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(phone){
@@ -117,10 +128,9 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                                         p2.desc,
                                         p2.cat,
                                         p2.pid,
-                                        p2.quantity,
                                         homeUser
-                                    )
-                                ).addToBackStack(null).commit()
+                                    ),"homeback"
+                                ).commit()
                             }
                         }
 
@@ -165,7 +175,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                                 R.anim.fade_in,
                                 R.anim.fade_out
                             )
-                            transaction.replace(R.id.main_frame, ProductFragment(p2.name,p2.price,p2.image,p2.desc,p2.cat,p2.pid,p2.quantity,homeUser)).addToBackStack(null).commit()
+                            transaction.replace(R.id.main_frame, ProductFragment(p2.name,p2.price,p2.image,p2.desc,p2.cat,p2.pid,homeUser),"homeback").commit()
                         }
                     }
 
@@ -211,7 +221,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
                     R.anim.fade_in,
                     R.anim.fade_out
                 )
-                transaction.replace(R.id.main_frame, LoginFragment()).commit()
+                transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
             }
             builder.setNegativeButton("No"){dialog,which ->
                 dialog.cancel()

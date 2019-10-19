@@ -175,6 +175,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
         </androidx.cardview.widget.CardView>
-
+        <androidx.cardview.widget.CardView
+            android:layout_marginLeft="-30dp"
+            app:cardCornerRadius="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="168dp"
+            android:layout_height="48dp">
+            <Button
+                android:background="@drawable/button_corners"
+                android:textColor="#FFF"
+                android:textSize="12sp"
+                android:fontFamily="@font/opensans"
+                android:textStyle="bold"
+                android:text="Check Orders"
+                android:layout_gravity="center"
+                android:id="@+id/btn_new_orders"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </FrameLayout>

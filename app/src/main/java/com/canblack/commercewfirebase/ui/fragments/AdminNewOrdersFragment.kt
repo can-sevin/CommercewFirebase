@@ -44,8 +44,6 @@ class AdminNewOrdersFragment : Fragment() {
         ordersList = viewNewOrder.findViewById(R.id.re_order_cartlist)
         ordersList!!.layoutManager = LinearLayoutManager(context)
 
-
-
         return viewNewOrder
     }
 
@@ -64,10 +62,10 @@ class AdminNewOrdersFragment : Fragment() {
             }
 
             override fun onBindViewHolder(p0: AdminOrdersVH, p1: Int, p2: AdminOrders) {
-                p0.userName.setText("Name:"+p2.name)
-                p0.userAddress.setText("Address:"+p2.address)
-                p0.userDateTime.setText("Tİme:"+p2.time)
-                p0.userTotalPrice.setText("Total:"+p2.total)
+                p0.userName.setText("Name:"+p2.Name)
+                p0.userAddress.setText("Address:"+p2.Address)
+                p0.userDateTime.setText("Tİme:"+p2.Time)
+                p0.userTotalPrice.setText("Total:"+p2.TotalPrice.toString())
 
                 p0.btn_show.setOnClickListener {
                     val manager = activity!!.supportFragmentManager
@@ -80,10 +78,8 @@ class AdminNewOrdersFragment : Fragment() {
                 }
             }
         }
-
         ordersList!!.adapter = adapter
         adapter.startListening()
-
     }
 
 

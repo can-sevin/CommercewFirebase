@@ -23,7 +23,6 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +42,7 @@ class LoginFragment : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, AdminFragment()).commit()
+            transaction.replace(R.id.main_frame, AdminFragment(),"forgot").commit()
         }
 
         btn_log.setOnClickListener {
@@ -57,7 +56,7 @@ class LoginFragment : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, ForgotFragment()).commit()
+            transaction.add(R.id.main_frame, ForgotFragment(),"forgot").commit()
         }
 
         btn_register.setOnClickListener {
@@ -67,7 +66,7 @@ class LoginFragment : Fragment() {
                     R.anim.fade_in,
                     R.anim.fade_out
                 )
-                transaction.replace(R.id.main_frame, RegisterFragment()).commit()
+                transaction.replace(R.id.main_frame, RegisterFragment(),"forgot").commit()
             }
         return viewLogin
     }

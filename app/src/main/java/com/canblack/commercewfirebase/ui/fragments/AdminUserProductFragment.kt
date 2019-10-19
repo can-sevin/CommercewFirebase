@@ -33,6 +33,5 @@ class AdminUserProductFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_admin_user_product, container, false)
 
 
-
     }
 }
