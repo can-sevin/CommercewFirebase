@@ -8,5 +8,18 @@
     <FrameLayout
         android:id="@+id/main_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="32dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:progressDrawable="@drawable/circular_back"
+                android:id="@+id/progressLogin"
+                android:layout_width="121dp"
+                android:visibility="gone"
+                android:layout_height="121dp"/>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

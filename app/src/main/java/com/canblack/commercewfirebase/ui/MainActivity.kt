@@ -1,27 +1,22 @@
 package com.canblack.commercewfirebase.ui
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.fragments.*
-import com.dd.processbutton.iml.ActionProcessButton
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.android.gms.auth.api.signin.internal.Storage
-import com.google.android.gms.tasks.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -29,28 +24,23 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add_product.*
-import java.lang.Exception
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.storage.StorageTask
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlin.concurrent.thread
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var user : FirebaseUser
-    var storageProfilePicture = FirebaseStorage.getInstance().reference.child("Users Picture")
-    lateinit var imageUri:Uri
-    lateinit var myUrl:String
+    private var storageProfilePicture = FirebaseStorage.getInstance().reference.child("Users Picture")
+    private lateinit var imageUri:Uri
+    private lateinit var myUrl:String
     private lateinit var uploadTask:UploadTask
-    lateinit var downloadImageUrl:String
-    var productData = FirebaseDatabase.getInstance().getReference("Products")
-    var productImageRef: StorageReference = FirebaseStorage.getInstance().reference.child("Product Images")
-    lateinit var productRef: DatabaseReference
+    private lateinit var downloadImageUrl:String
+    private var productData = FirebaseDatabase.getInstance().getReference("Products")
+    private var productImageRef: StorageReference = FirebaseStorage.getInstance().reference.child("Product Images")
+    private lateinit var productRef: DatabaseReference
     var database = FirebaseDatabase.getInstance()
     var myRef = database.getReference("Users")
 
@@ -59,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
         productRef = FirebaseDatabase.getInstance().reference.child("Products")
-        val currentUser = auth.currentUser
         if(savedInstanceState == null){
             val manager = supportFragmentManager
             val transaction = manager.beginTransaction()
@@ -77,11 +66,11 @@ class MainActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Logout?")
                 builder.setMessage("Are you want to exit?")
-                builder.setPositiveButton("YES"){dialog, which ->
+                builder.setPositiveButton("YES"){ _, _ ->
                     auth.signOut()
                     finish()
                 }
-                builder.setNegativeButton("No"){dialog,which ->
+                builder.setNegativeButton("No"){ dialog, _ ->
                     dialog.cancel()
                 }
                 val dialog: AlertDialog = builder.create()
@@ -91,11 +80,11 @@ class MainActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Logout?")
                 builder.setMessage("Are you want to logout?")
-                builder.setPositiveButton("YES"){dialog, which ->
+                builder.setPositiveButton("YES"){ _ , _ ->
                     auth.signOut()
                     finish()
                 }
-                builder.setNegativeButton("No"){dialog,which ->
+                builder.setNegativeButton("No"){ dialog, _ ->
                     dialog.cancel()
                 }
                 val dialog: AlertDialog = builder.create()
@@ -105,11 +94,11 @@ class MainActivity : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Logout?")
                 builder.setMessage("Are you want to logout?")
-                builder.setPositiveButton("YES"){dialog, which ->
+                builder.setPositiveButton("YES"){ _, _ ->
                     auth.signOut()
                     finish()
                 }
-                builder.setNegativeButton("No"){dialog,which ->
+                builder.setNegativeButton("No"){ dialog, _ ->
                     dialog.cancel()
                 }
                 val dialog: AlertDialog = builder.create()
@@ -147,7 +136,6 @@ class MainActivity : AppCompatActivity() {
             .setLifecycleOwner(this)
             .build()
 
-
        val recyclerAdapter = object : FirebaseRecyclerAdapter<Products, ProductVH>(options) {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
@@ -172,23 +160,21 @@ class MainActivity : AppCompatActivity() {
         re_new.setHasFixedSize(true)
         (recyclerAdapter as FirebaseRecyclerAdapter<Products, ProductVH>).startListening()
     }
+
     fun Login(email:String,pass:String){
         auth.signInWithEmailAndPassword(email,pass)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     user = auth.currentUser!!
-                    var adminRef = FirebaseDatabase.getInstance().getReference("Admin")
-                    var userRef = FirebaseDatabase.getInstance().getReference("Users")
-                    val progressLogin = ProgressDialog(this)
-                    progressLogin.setTitle("Login on Process")
-                    progressLogin.setMessage("Please wait")
-                    progressLogin.setCancelable(false)
-                    progressLogin.setIndeterminate(true)
-                    progressLogin.setIndeterminateDrawable(resources.getDrawable(R.drawable.circular_back))
-                    progressLogin.show()
+                    val adminRef = FirebaseDatabase.getInstance().getReference("Admin")
+                    val userRef = FirebaseDatabase.getInstance().getReference("Users")
+                    progressLogin.isIndeterminate = true
+                    progressLogin.visibility = View.VISIBLE
                     userRef.addListenerForSingleValueEvent(object:ValueEventListener{
                         override fun onCancelled(p0: DatabaseError) {
+                            Toast.makeText(baseContext, p0.toString(),
+                                Toast.LENGTH_SHORT).show()
                         }
                         override fun onDataChange(p0: DataSnapshot) {
                             for (data in p0.children) {
@@ -200,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 if (data.child("email").value == email) {
                                     Thread.sleep(2000L)
-                                    progressLogin.dismiss()
+                                    progressLogin.visibility = View.GONE
                                     transaction.replace(R.id.main_frame, HomeFragment(user),"Home").commit()
                                 }
                             }
@@ -208,7 +194,7 @@ class MainActivity : AppCompatActivity() {
                 })
                     adminRef.addListenerForSingleValueEvent(object:ValueEventListener{
                         override fun onCancelled(p0: DatabaseError) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
                         }
                         override fun onDataChange(p0: DataSnapshot) {
                             for (data in p0.children) {
@@ -219,7 +205,7 @@ class MainActivity : AppCompatActivity() {
                                     R.anim.fade_out
                                 )
                                 if (data.child("email").value == email) {
-                                    progressLogin.dismiss()
+                                    progressLogin.visibility = View.GONE
                                     transaction.replace(R.id.main_frame, AddProductFragment(user,auth),"AdminHome").commit()
                                 }
                             }
@@ -238,11 +224,7 @@ class MainActivity : AppCompatActivity() {
         ValidatePhone(name,tel,pass,email)
         auth.createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                } else {
-                    // If sign in fails, display a message to the user.
+                if (!task.isSuccessful) {
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
                 }
@@ -275,33 +257,32 @@ class MainActivity : AppCompatActivity() {
         myRef = FirebaseDatabase.getInstance().reference
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Toast.makeText(baseContext, p0.toString(),
+                    Toast.LENGTH_SHORT).show()
             }
             override fun onDataChange(p0: DataSnapshot) {
                 val idemail = email.replace(".", ",")
                 if(!(p0.child("Admin").child(idemail).exists())){
                     val userHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
-                    userHashMap.put("phone",tel)
-                    userHashMap.put("password",pass)
-                    userHashMap.put("name",name)
-                    userHashMap.put("email",email)
+                    //Android KTX
+                    userHashMap["phone"] = tel
+                    userHashMap["password"] = pass
+                    userHashMap["name"] = name
+                    userHashMap["email"] = email
                     myRef.child("Admin").child(idemail).updateChildren(userHashMap)
-                        .addOnCompleteListener(object : OnCompleteListener<Void>{
-                            override fun onComplete(p0: Task<Void>) {
-                                if(p0.isSuccessful){
-                                    Toast.makeText(baseContext, "Tebrikler Hesabınız oluşturuldu",
-                                        Toast.LENGTH_SHORT).show()
-                                    val manager = supportFragmentManager
-                                    val transaction = manager.beginTransaction()
-                                    transaction.setCustomAnimations(
-                                        R.anim.fade_in,
-                                        R.anim.fade_out
-                                    )
-                                    transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
-                                    val user = auth.currentUser
-                                }
+                        .addOnCompleteListener { p0 ->
+                            if(p0.isSuccessful){
+                                Toast.makeText(baseContext, "Tebrikler Hesabınız oluşturuldu",
+                                    Toast.LENGTH_SHORT).show()
+                                val manager = supportFragmentManager
+                                val transaction = manager.beginTransaction()
+                                transaction.setCustomAnimations(
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
+                                )
+                                transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
                             }
-                        })
+                        }
                 } else {
                     Toast.makeText(baseContext, "This phone number in our records.",
                         Toast.LENGTH_SHORT).show()
@@ -316,7 +297,8 @@ class MainActivity : AppCompatActivity() {
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             val idemail = email.replace(".", ",")
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Toast.makeText(baseContext, p0.toString(),
+                    Toast.LENGTH_SHORT).show()
             }
             override fun onDataChange(p0: DataSnapshot) {
                     if(!(p0.child("Users").child(idemail).exists())){
@@ -326,14 +308,12 @@ class MainActivity : AppCompatActivity() {
                         userHashMap.put("name",name)
                         userHashMap.put("email",email)
                         myRef.child("Users").child(idemail).updateChildren(userHashMap)
-                            .addOnCompleteListener(object : OnCompleteListener<Void>{
-                                override fun onComplete(p0: Task<Void>) {
-                                    if(p0.isSuccessful){
-                                        Toast.makeText(baseContext, "Tebrikler Hesabınız oluşturuldu",
-                                            Toast.LENGTH_SHORT).show()
-                                    }
+                            .addOnCompleteListener { p0 ->
+                                if(p0.isSuccessful){
+                                    Toast.makeText(baseContext, "Tebrikler Hesabınız oluşturuldu",
+                                        Toast.LENGTH_SHORT).show()
                                 }
-                            })
+                            }
                     } else {
                         Toast.makeText(baseContext, "This phone number in our records.",
                             Toast.LENGTH_SHORT).show()
@@ -371,55 +351,46 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT).show()
         }else{
             filePath = productImageRef.child(imageUri.lastPathSegment+ productKey +".jpg")
-            var uploadTask = filePath.putFile(imageUri)
-            uploadTask.addOnFailureListener(object:OnFailureListener{
-                override fun onFailure(p0: Exception) {
-                    Toast.makeText(baseContext, "Image install process is failure",
-                        Toast.LENGTH_SHORT).show()
-                }
-            }).addOnSuccessListener(object:OnSuccessListener<UploadTask.TaskSnapshot>{
-                override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
-                    Toast.makeText(baseContext, "Image install process is success",
-                        Toast.LENGTH_SHORT).show()
-                        val urlTask = uploadTask.continueWithTask(object : Continuation<UploadTask.TaskSnapshot, Task<Uri>> {
-                        override fun then(p0: Task<UploadTask.TaskSnapshot>): Task<Uri> {
-                            if(!p0.isSuccessful){
-                                throw p0.exception!!
-                            }
-                            downloadImageUrl = filePath.toString()
-                            return filePath.downloadUrl
-                        }
-                    }).addOnCompleteListener(object : OnCompleteListener<Uri>{
-                        override fun onComplete(p0: Task<Uri>) {
-                               if(p0.isSuccessful){
-                                   Toast.makeText(baseContext, "Product Image save to Database",
-                                       Toast.LENGTH_SHORT).show()
-                                        val productHashMap = HashMap<String,Any>()
-                                        productHashMap.put("pid",productKey)
-                                        productHashMap.put("name",p_name)
-                                        productHashMap.put("desc",p_desc)
-                                        productHashMap.put("image",p0.result.toString())
-                                        productHashMap.put("cat",p_cat)
-                                        productHashMap.put("quantity",p_quantity)
-                                        productHashMap.put("price",p_price)
+            val uploadTask = filePath.putFile(imageUri)
+            uploadTask.addOnFailureListener {
+                Toast.makeText(baseContext, "Image install process is failure",
+                    Toast.LENGTH_SHORT).show()
+            }.addOnSuccessListener {
+                Toast.makeText(baseContext, "Image install process is success",
+                    Toast.LENGTH_SHORT).show()
+                val urlTask = uploadTask.continueWithTask { p0 ->
+                    if(!p0.isSuccessful){
+                        throw p0.exception!!
+                    }
+                    downloadImageUrl = filePath.toString()
+                    filePath.downloadUrl
+                }.addOnCompleteListener { p0 ->
+                    if(p0.isSuccessful){
+                        Toast.makeText(baseContext, "Product Image save to Database",
+                            Toast.LENGTH_SHORT).show()
+                        val productHashMap = HashMap<String,Any>()
+                        //Android KTX
+                        productHashMap["pid"] = productKey
+                        productHashMap["name"] = p_name
+                        productHashMap["desc"] = p_desc
+                        productHashMap["image"] = p0.result.toString()
+                        productHashMap["cat"] = p_cat
+                        productHashMap["quantity"] = p_quantity
+                        productHashMap["price"] = p_price
 
-                                   productRef.child(productKey).updateChildren(productHashMap)
-                                       .addOnCompleteListener(object : OnCompleteListener<Void>{
-                                           override fun onComplete(p0: Task<Void>) {
-                                               if(p0.isSuccessful){
-                                                   Toast.makeText(baseContext, "Product is added",
-                                                       Toast.LENGTH_SHORT).show()
-                                               } else {
-                                                   Toast.makeText(baseContext, p0.exception.toString(),
-                                                       Toast.LENGTH_SHORT).show()
-                                               }
-                                           }
-                                   })
-                               }
-                        }
-                    })
+                        productRef.child(productKey).updateChildren(productHashMap)
+                            .addOnCompleteListener { p0 ->
+                                if(p0.isSuccessful){
+                                    Toast.makeText(baseContext, "Product is added",
+                                        Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(baseContext, p0.exception.toString(),
+                                        Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    }
                 }
-            })
+            }
         }
     }
 
@@ -430,47 +401,41 @@ class MainActivity : AppCompatActivity() {
         val manager = this.supportFragmentManager
         val transaction = manager.beginTransaction()
 
-        uploadTask.continueWithTask(object : Continuation <UploadTask.TaskSnapshot, Task<Uri>>{
-
-            override fun then(p0: Task<UploadTask.TaskSnapshot>): Task<Uri> {
-                if(!p0.isSuccessful){
-                    throw p0.exception!!
-                }
-
-                return fileRef.downloadUrl
+        uploadTask.continueWithTask { p0 ->
+            if(!p0.isSuccessful){
+                throw p0.exception!!
             }
-        })
-            .addOnCompleteListener(object : OnCompleteListener<Uri> {
 
-                override fun onComplete(p0: Task<Uri>) {
-                    if(p0.isSuccessful){
-                        var downloadUrl = p0.result
-                        myUrl = downloadUrl.toString()
+            fileRef.downloadUrl
+        }
+            .addOnCompleteListener { p0 ->
+                if(p0.isSuccessful){
+                    val downloadUrl = p0.result
+                    myUrl = downloadUrl.toString()
 
-                        var userref = FirebaseDatabase.getInstance().reference.child("Users")
+                    val userref = FirebaseDatabase.getInstance().reference.child("Users")
 
-                        val userrHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
-                        userrHashMap.put("phone",edtPhone!!.text.toString())
-                        userrHashMap.put("password",edtPass!!.text.toString())
-                        userrHashMap.put("name",edtName!!.text.toString())
-                        userrHashMap.put("email",edtEmail!!.text.toString())
-                        userrHashMap.put("image",myUrl)
-                        userref.child(user.email!!.replace(".",",")).updateChildren(userrHashMap)
+                    val userrHashMap = HashMap<String,Any>()//Obje yerine Any kullanılıyor
+                    userrHashMap.put("phone",edtPhone!!.text.toString())
+                    userrHashMap.put("password",edtPass!!.text.toString())
+                    userrHashMap.put("name",edtName!!.text.toString())
+                    userrHashMap.put("email",edtEmail!!.text.toString())
+                    userrHashMap.put("image",myUrl)
+                    userref.child(user.email!!.replace(".",",")).updateChildren(userrHashMap)
 
-                        transaction.setCustomAnimations(
-                            R.anim.fade_in,
-                            R.anim.fade_out
-                        )
-                        transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
-                        Toast.makeText(this@MainActivity, "Profile info updated success",
-                            Toast.LENGTH_SHORT).show()
-                        finish()
-                    }else{
-                        Toast.makeText(this@MainActivity, "Error info update",
-                            Toast.LENGTH_SHORT).show()
-                    }
+                    transaction.setCustomAnimations(
+                        R.anim.fade_in,
+                        R.anim.fade_out
+                    )
+                    transaction.replace(R.id.main_frame, LoginFragment(),"Login").commit()
+                    Toast.makeText(this@MainActivity, "Profile info updated success",
+                        Toast.LENGTH_SHORT).show()
+                    finish()
+                }else{
+                    Toast.makeText(this@MainActivity, "Error info update",
+                        Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
     }
 
     fun CropImage(){
