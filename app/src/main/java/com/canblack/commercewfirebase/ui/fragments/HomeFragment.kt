@@ -52,6 +52,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         val img = viewHome.findViewById<CircleImageView>(R.id.profile_image)
         val btn_logout = viewHome.findViewById<ImageView>(R.id.btn_home_back)
         val txt_welcome = viewHome.findViewById<TextView>(R.id.txt_welcome)
+        val btn_fav = viewHome.findViewById<FloatingActionButton>(R.id.btn_home_wish)
 
         re_new.setHasFixedSize(true)
         re_new.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -77,6 +78,16 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             .setLifecycleOwner(this)
             .build()
 
+
+        btn_fav.setOnClickListener {
+            val manager = activity!!.supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            transaction.replace(R.id.main_frame, WishFragment(homeUser),"homeback").commit()
+        }
 
         btn_basket.setOnClickListener {
             val manager = activity!!.supportFragmentManager

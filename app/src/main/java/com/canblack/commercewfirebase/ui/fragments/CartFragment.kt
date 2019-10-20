@@ -27,10 +27,6 @@ class CartFragment(user: FirebaseUser) : Fragment() {
     var txt_msg:TextView? = null
     var txt_total_price:TextView? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

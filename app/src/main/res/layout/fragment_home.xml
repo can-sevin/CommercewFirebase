@@ -108,6 +108,16 @@
         </LinearLayout>
     </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_home_wish"
+        android:layout_width="wrap_content"
+        app:cardCornerRadius="30dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|left"
+        android:src="@drawable/ic_star_black_24dp" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_home_add_basket"
         android:layout_width="wrap_content"
         app:cardCornerRadius="30dp"

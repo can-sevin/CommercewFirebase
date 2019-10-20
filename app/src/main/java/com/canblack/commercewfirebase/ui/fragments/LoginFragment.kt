@@ -14,13 +14,7 @@ import com.google.firebase.database.*
 
 class LoginFragment : Fragment() {
 
-    private lateinit var productRef: DatabaseReference
     var database = FirebaseDatabase.getInstance()
-    var adminRef = database.getReference("Admin")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

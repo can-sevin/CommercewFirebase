@@ -77,16 +77,15 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val currentDate = SimpleDateFormat("dd/MM/yyyy").format(calForDate.time)
         val currentTime = SimpleDateFormat("HH:mm:ss").format(calForDate.time)
         pquantity = quantity.number.toInt()
-        Toast.makeText(context, pquantity.toString(),
-            Toast.LENGTH_SHORT).show()
+
         val cartMap = HashMap<String,Any>()
-        cartMap.put("pname",pname)
-        cartMap.put("price",pprice)
-        cartMap.put("quantity",pquantity)
-        cartMap.put("curDate",currentDate)
-        cartMap.put("curTime",currentTime)
-        cartMap.put("pid",ppid)
-        cartMap.put("discount","")
+        cartMap["pname"] = pname
+        cartMap["price"] = pprice
+        cartMap["quantity"] = pquantity
+        cartMap["curDate"] = currentDate
+        cartMap["curTime"] = currentTime
+        cartMap["pid"] = ppid
+        cartMap["discount"] = ""
 
         val idemail = productUser.email!!.replace(".", ",")
         cartListRef.child("User View").child(idemail)
