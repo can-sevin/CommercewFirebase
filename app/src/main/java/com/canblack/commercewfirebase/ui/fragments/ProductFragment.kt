@@ -10,15 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.User
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_cart.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -35,12 +31,8 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
     lateinit var quantity:ElegantNumberButton
     var pquantity:Int = 0
     val cartListRef = FirebaseDatabase.getInstance().reference.child("Card List")
+    val wishListRef = FirebaseDatabase.getInstance().reference.child("Wish List")
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +51,12 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         val btn_basket = viewProduct.findViewById<FloatingActionButton>(R.id.btn_add_basket)
         quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
         Picasso.get().load(pimg).into(img)
+
+
+        btn_like.setOnClickListener {
+            addToWishList()
+        }
+
         btn_basket.setOnClickListener {
             addingToCardList()
             if(state.equals("Order Placed") || state.equals("Order Shipped"))
@@ -71,6 +69,32 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         }
         return viewProduct
     }
+
+    private fun addToWishList() {
+        val calForDate = Calendar.getInstance()
+        val currentDate = SimpleDateFormat("dd/MM/yyyy").format(calForDate.time)
+        val currentTime = SimpleDateFormat("HH:mm:ss").format(calForDate.time)
+        pquantity = quantity.number.toInt()
+
+        val wishMap = HashMap<String,Any>()
+        wishMap["pname"] = pname
+        wishMap["price"] = pprice
+        wishMap["quantity"] = pquantity
+        wishMap["curDate"] = currentDate
+        wishMap["curTime"] = currentTime
+        wishMap["pid"] = ppid
+        wishMap["discount"] = ""
+
+        val idemail = productUser.email!!.replace(".", ",")
+        wishListRef.child("User View").child(idemail)
+            .child("Products").child(ppid).updateChildren(wishMap)
+            .addOnCompleteListener { p0 ->
+                if(p0.isSuccessful){
+                        Toast.makeText(context, "Product Added to WishList",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
 
     private fun addingToCardList() {
         val calForDate = Calendar.getInstance()

@@ -110,6 +110,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         }
 
         val recyclerPhoneAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(phone){
+
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductVH {
                 val phoneRecyclerView =
                     LayoutInflater.from(activity).inflate(R.layout.item_phone, parent, false)

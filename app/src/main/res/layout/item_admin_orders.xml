@@ -17,17 +17,17 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="180dp"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/txt_admin_orders_product_name"
-                android:paddingLeft="8dp"
-                android:textSize="16sp"
-                android:text="UserName"
-                android:fontFamily="@font/opensans"
-                android:textStyle="bold"
-                android:textColor="#000"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans"
+                android:paddingLeft="8dp"
+                android:text="UserName"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/txt_admin_orders_total_price"
                 android:paddingLeft="8dp"
@@ -36,17 +36,6 @@
                 android:textStyle="bold"
                 android:layout_gravity="start"
                 android:textSize="12sp"
-                android:textColor="#000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/txt_admin_orders_product_quantity"
-                android:paddingLeft="8dp"
-                android:textSize="8sp"
-                android:text="Product Quantity"
-                android:layout_gravity="start"
-                android:fontFamily="@font/opensans"
-                android:textStyle="bold"
                 android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -80,8 +69,8 @@
             android:layout_height="match_parent">
             <androidx.cardview.widget.CardView
                 app:cardCornerRadius="30dp"
-                android:layout_width="128dp"
-                android:layout_height="48dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <Button
                     android:background="@drawable/button_corners"
                     android:textColor="#FFF"

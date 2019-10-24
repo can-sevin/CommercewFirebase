@@ -31,6 +31,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val viewCart = inflater.inflate(R.layout.fragment_cart, container, false)
         txt_total_price = viewCart.findViewById(R.id.txt_total_price)
         txt_msg = viewCart.findViewById(R.id.txt_cart_msg)
@@ -51,17 +52,20 @@ class CartFragment(user: FirebaseUser) : Fragment() {
         }
 
         val cartListRef = FirebaseDatabase.getInstance().reference.child("Card List")
+
         val optionss = FirebaseRecyclerOptions.Builder<Cart>()
             .setQuery(cartListRef.child("User View")
                 .child(cartUser.email!!.replace(".",",")).child("Products"), Cart::class.java).build()
 
         val adapter = object : FirebaseRecyclerAdapter<Cart,CartVH>(optionss){
+
             fun DelItem(pos:Int) {
                 snapshots.getSnapshot(pos).ref.removeValue()
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartVH {
-                val view = LayoutInflater.from(activity).inflate(R.layout.item_cart,parent,false)
+                val view = LayoutInflater.from(activity).
+                    inflate(R.layout.item_cart,parent,false)
                 return CartVH(view)
             }
 

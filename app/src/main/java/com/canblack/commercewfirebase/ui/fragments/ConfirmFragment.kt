@@ -102,43 +102,40 @@ class ConfirmFragment(total:Int,user:FirebaseUser) : Fragment() {
         val ordersRef = FirebaseDatabase.getInstance().reference.child("Orders")
             .child(userConfirm.email!!.replace(".",","))
             .child("$currentDate $currentTime")
-        val ordersMap = HashMap<String,Any>()
-        ordersMap.put("Phone",edt_phone.text.toString())
-        ordersMap.put("Address",edt_address.text.toString())
-        ordersMap.put("Name",edt_name.text.toString())
-        ordersMap.put("City",edt_city.text.toString())
-        ordersMap.put("TotalPrice",total)
-        ordersMap.put("Date",currentDate)
-        ordersMap.put("Time",currentTime)
-        ordersMap.put("State","Not Shipped")
 
-        ordersRef.updateChildren(ordersMap).addOnCompleteListener(object : OnCompleteListener<Void> {
-            override fun onComplete(p0: Task<Void>) {
-                    if(p0.isSuccessful){
-                        FirebaseDatabase.getInstance().reference.child("Card List")
-                            .child("User View")
-                            .child(userConfirm.email!!.replace(".",","))
-                            .removeValue()
-                            .addOnCompleteListener(object : OnCompleteListener<Void>{
-                                override fun onComplete(p0: Task<Void>) {
-                                    if(p0.isSuccessful){
-                                        Toast.makeText(
-                                            activity,
-                                            "Final order successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        val manager = activity!!.supportFragmentManager
-                                        val transaction = manager.beginTransaction()
-                                        transaction.setCustomAnimations(
-                                            R.anim.fade_in,
-                                            R.anim.fade_out
-                                        )
-                                        transaction.replace(R.id.main_frame,HomeFragment(userConfirm),"Home").commit()
-                                    }
-                                }
-                            })
+        val ordersMap = HashMap<String,Any>()
+        ordersMap["Phone"] = edt_phone.text.toString()
+        ordersMap["Address"] = edt_address.text.toString()
+        ordersMap["Name"] = edt_name.text.toString()
+        ordersMap["City"] = edt_city.text.toString()
+        ordersMap["TotalPrice"] = total.toString()
+        ordersMap["Date"] = currentDate
+        ordersMap["Time"] = currentTime
+        ordersMap["State"] = "Not Shipped"
+
+        ordersRef.updateChildren(ordersMap).addOnCompleteListener { p0 ->
+            if(p0.isSuccessful){
+                FirebaseDatabase.getInstance().reference.child("Card List")
+                    .child("User View")
+                    .child(userConfirm.email!!.replace(".",","))
+                    .removeValue()
+                    .addOnCompleteListener { p0 ->
+                        if(p0.isSuccessful){
+                            Toast.makeText(
+                                activity,
+                                "Final order successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val manager = activity!!.supportFragmentManager
+                            val transaction = manager.beginTransaction()
+                            transaction.setCustomAnimations(
+                                R.anim.fade_in,
+                                R.anim.fade_out
+                            )
+                            transaction.replace(R.id.main_frame,HomeFragment(userConfirm),"Home").commit()
+                        }
                     }
             }
-        })
+        }
     }
 }

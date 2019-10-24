@@ -19,6 +19,7 @@ import java.util.*
 class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
 
     var adminauth = auth
+    var adminUser = user
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,7 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
                 R.anim.fade_in,
                 R.anim.fade_out
             )
-            transaction.replace(R.id.main_frame, AdminNewOrdersFragment()).commit()
+            transaction.replace(R.id.main_frame, AdminNewOrdersFragment(adminUser)).commit()
         }
 
         btn_back.setOnClickListener {

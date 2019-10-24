@@ -1,14 +1,10 @@
 package com.canblack.commercewfirebase.ui.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +32,9 @@ class WishFragment(user:FirebaseUser) : Fragment() {
         re_wish!!.layoutManager = re_layout
         re_wish!!.setHasFixedSize(true)
 
+        val cartListRef = FirebaseDatabase.getInstance().reference.child("Card List")
         val wishListRef = FirebaseDatabase.getInstance().reference.child("Wish List")
+
         val optionss = FirebaseRecyclerOptions.Builder<Cart>()
             .setQuery(wishListRef.child("User View")
                 .child(wishUser.email!!.replace(".",",")).child("Products"), Cart::class.java).build()
@@ -52,7 +50,7 @@ class WishFragment(user:FirebaseUser) : Fragment() {
                 p0.txt_wish_price.text = "Price:"+p2.price
 
                 p0.btn_wish_del.setOnClickListener {
-                    FirebaseDatabase.getInstance().reference.child("Card List").child("User View")
+                    FirebaseDatabase.getInstance().reference.child("Wish list").child("User View")
                         .child(wishUser.email!!.replace(".",",")).child("Products")
                         .child(p2.pid).removeValue()
                         .addOnCompleteListener {
@@ -69,22 +67,33 @@ class WishFragment(user:FirebaseUser) : Fragment() {
                     val wishMap = HashMap<String,Any>()
                     wishMap["pname"] = p2.pname
                     wishMap["price"] = p2.price
-                    wishMap["quantity"] = 1
+                    wishMap["quantity"] = p2.quantity
                     wishMap["curDate"] = currentDate
                     wishMap["curTime"] = currentTime
                     wishMap["pid"] = p2.pid
                     wishMap["discount"] = ""
 
                     val idemail = wishUser.email!!.replace(".", ",")
-                    wishListRef.child("User View").child(idemail)
+                    cartListRef.child("User View").child(idemail)
                         .child("Products").child(p2.pid).updateChildren(wishMap)
-                        .
-
-
+                        .addOnCompleteListener { p0->
+                            if(p0.isSuccessful){
+                                cartListRef.child("Admin View").child(idemail)
+                                    .child("Products").child(p2.pid).updateChildren(wishMap)
+                                    .addOnCompleteListener { p0 ->
+                                        if(p0.isSuccessful){
+                                            Toast.makeText(context, "Product Added to Basket",
+                                                Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                            }
+                        }
                 }
             }
 
         }
+            re_wish!!.adapter = adapter
+            adapter.startListening()
             return viewWish
     }
 }

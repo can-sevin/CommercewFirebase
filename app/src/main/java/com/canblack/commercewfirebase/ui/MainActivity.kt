@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add_product.*
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.iid.FirebaseInstanceId
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
@@ -49,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
         productRef = FirebaseDatabase.getInstance().reference.child("Products")
+
+        val refreshedToken = FirebaseInstanceId.getInstance().token
+        Log.d("DeviceToken", refreshedToken.toString())
+
         if(savedInstanceState == null){
             val manager = supportFragmentManager
             val transaction = manager.beginTransaction()
@@ -59,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             transaction.add(R.id.main_frame, LoginFragment(),"Login").commit()
         }
     }
+
 
     override fun onBackPressed() {
         when {
