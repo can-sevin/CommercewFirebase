@@ -15,7 +15,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
+import com.canblack.commercewfirebase.ui.ViewHolder.ProductVH
 import com.canblack.commercewfirebase.ui.fragments.*
+import com.canblack.commercewfirebase.ui.model.Products
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -139,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         val re_new = findViewById<RecyclerView>(R.id.recycler_new)
 
         val options = FirebaseRecyclerOptions.Builder<Products>()
-            .setQuery(productData,Products::class.java)
+            .setQuery(productData, Products::class.java)
             .setLifecycleOwner(this)
             .build()
 

@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.Products
-import com.canblack.commercewfirebase.ui.User
+import com.canblack.commercewfirebase.ui.ViewHolder.ProductVH
+import com.canblack.commercewfirebase.ui.ViewHolder.SliderAdapter
+import com.canblack.commercewfirebase.ui.model.Products
+import com.canblack.commercewfirebase.ui.model.User
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,7 +35,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
     var productRef:DatabaseReference = FirebaseDatabase.getInstance().reference.child("Products")
     var database = FirebaseDatabase.getInstance().getReference("Users")
     private var homeUser = user
-    lateinit var model:Products
+    lateinit var model: Products
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,8 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         re_phone.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
 
-        sliderView.sliderAdapter = SliderAdapter(context)
+        sliderView.sliderAdapter =
+            SliderAdapter(context)
         sliderView.scrollTimeInSec = 4
         sliderView.startAutoCycle()
         sliderView.setIndicatorAnimation(IndicatorAnimations.SLIDE)
@@ -69,12 +72,13 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
 
 
         val options = FirebaseRecyclerOptions.Builder<Products>()
-            .setQuery(productRef,Products::class.java)
+            .setQuery(productRef, Products::class.java)
             .setLifecycleOwner(this)
             .build()
 
         val phone = FirebaseRecyclerOptions.Builder<Products>()
-            .setQuery(productRef.orderByChild("cat").equalTo("Telefon"),Products::class.java)
+            .setQuery(productRef.orderByChild("cat").equalTo("Telefon"),
+                Products::class.java)
             .setLifecycleOwner(this)
             .build()
 
@@ -109,7 +113,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             transaction.replace(R.id.main_frame, ProfileFragment(homeUser),"homeback").commit()
         }
 
-        val recyclerPhoneAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(phone){
+        val recyclerPhoneAdapter = object : FirebaseRecyclerAdapter<Products, ProductVH>(phone){
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductVH {
                 val phoneRecyclerView =
@@ -158,7 +162,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             }
         }
 
-        val recyclerAdapter = object : FirebaseRecyclerAdapter<Products,ProductVH>(options) {
+        val recyclerAdapter = object : FirebaseRecyclerAdapter<Products, ProductVH>(options) {
             override fun onCreateViewHolder(
                 parent: ViewGroup,
                 viewType: Int

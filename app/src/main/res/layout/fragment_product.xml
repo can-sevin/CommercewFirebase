@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/back"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.ProductFragment">
-    <LinearLayout
-        android:background="@drawable/back"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <TextView
             android:id="@+id/txt_product_name"
             android:textColor="#000"
@@ -92,4 +89,3 @@
             android:layout_gravity="end|right"
             android:src="@drawable/ic_add_circle_black_24dp" />
     </LinearLayout>
-</FrameLayout>

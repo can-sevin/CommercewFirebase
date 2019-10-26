@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/back"
+    android:orientation="vertical"
     tools:context=".ui.fragments.WishFragment">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
-            android:layout_marginLeft="-30dp"
+            android:layout_marginStart="-30dp"
             app:cardCornerRadius="26dp"
             android:layout_width="72dp"
             android:layout_height="48dp">
@@ -38,4 +35,3 @@
             android:layout_width="match_parent"
             android:layout_height="260dp"/>
     </LinearLayout>
-</FrameLayout>

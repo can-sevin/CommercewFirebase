@@ -1,6 +1,5 @@
-package com.canblack.commercewfirebase.ui.fragments;
+package com.canblack.commercewfirebase.ui.ViewHolder;
 
-import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

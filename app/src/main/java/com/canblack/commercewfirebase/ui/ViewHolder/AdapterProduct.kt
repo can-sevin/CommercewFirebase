@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.fragments
+package com.canblack.commercewfirebase.ui.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.ItemClickListener
-import com.squareup.picasso.Picasso
 
 class AdapterProduct(val ProductList:MutableList<Product>):RecyclerView.Adapter<AdapterProduct.ModelViewHolder>(){
 
@@ -20,9 +19,9 @@ class AdapterProduct(val ProductList:MutableList<Product>):RecyclerView.Adapter<
         val productPrice : TextView = productview.findViewById(R.id.txt_new_price)
         val productImage : ImageView = productview.findViewById(R.id.img_new_product)
 
-        fun bindItems(item:Product){
-            productName.setText(item.name)
-            productPrice.setText(item.price)
+        fun bindItems(item: Product){
+            productName.text = item.name
+            productPrice.text = item.price
         }
 
         fun setItemClickListener(listner:ItemClickListener){

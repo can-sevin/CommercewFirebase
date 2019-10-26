@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui
+package com.canblack.commercewfirebase.ui.model
 
 class AdminOrders{
 
@@ -11,9 +11,7 @@ class AdminOrders{
     var Time:String = ""
     var TotalPrice:String = ""
 
-    constructor():this("","","","","","","","") {
-
-    }
+    constructor():this("","","","","","","","")
 
     constructor(Price:String,Time:String,State:String,Phone:String,Name:String,Date:String,City:String,Adress:String){
         this.Address = Adress

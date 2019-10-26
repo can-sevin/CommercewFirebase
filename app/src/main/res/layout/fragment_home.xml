@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -106,7 +104,6 @@
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
-    </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_home_wish"
         android:layout_width="wrap_content"
@@ -115,7 +112,7 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_margin="16dp"
-        android:layout_gravity="bottom|left"
+        android:layout_gravity="bottom|start"
         android:src="@drawable/ic_star_black_24dp" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_home_add_basket"
@@ -125,6 +122,6 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_margin="16dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:src="@drawable/ic_shopping_cart_black_24dp" />
 </FrameLayout>

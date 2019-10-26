@@ -1,6 +1,5 @@
 package com.canblack.commercewfirebase.ui.fragments
 
-import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -15,12 +14,10 @@ import android.widget.Toast
 
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.MainActivity
-import com.canblack.commercewfirebase.ui.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
-import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ProfileFragment(user: FirebaseUser) : Fragment() {
@@ -136,11 +133,11 @@ class ProfileFragment(user: FirebaseUser) : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     if(p0.child("image").exists()){
-                        var image = p0.child("image").getValue().toString()
-                        var name = p0.child("name").getValue().toString()
-                        var pass = p0.child("pass").getValue().toString()
-                        var email = p0.child("email").getValue().toString()
-                        var phone = p0.child("phone").getValue().toString()
+                        var image = p0.child("image").value.toString()
+                        var name = p0.child("name").value.toString()
+                        var pass = p0.child("pass").value.toString()
+                        var email = p0.child("email").value.toString()
+                        var phone = p0.child("phone").value.toString()
 
                         Picasso.get().load(image).into(img)
                         edtName!!.setText(name)

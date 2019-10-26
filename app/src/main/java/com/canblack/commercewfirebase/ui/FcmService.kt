@@ -28,9 +28,7 @@ class FcmService : FirebaseMessagingService() {
         super.onMessageReceived(p0)
         p0.let { message->
             Log.i("FCM", message.data["message"].toString())
-
             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                 setupNotificationChannels()
             }

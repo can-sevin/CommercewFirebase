@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui
+package com.canblack.commercewfirebase.ui.fragments
 
 import android.content.Context
 import android.net.Uri
@@ -18,12 +18,12 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [SplashFragment.OnFragmentInteractionListener] interface
+ * [StartFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [SplashFragment.newInstance] factory method to
+ * Use the [StartFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SplashFragment : Fragment() {
+class StartFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -42,7 +42,7 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_splash, container, false)
+        return inflater.inflate(R.layout.fragment_start, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -87,12 +87,12 @@ class SplashFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment SplashFragment.
+         * @return A new instance of fragment StartFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SplashFragment().apply {
+            StartFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

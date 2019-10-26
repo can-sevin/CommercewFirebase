@@ -1,7 +1,5 @@
 package com.canblack.commercewfirebase.ui.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.AdminOrders
+import com.canblack.commercewfirebase.ui.ViewHolder.AdminOrderVH
+import com.canblack.commercewfirebase.ui.model.AdminOrders
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -34,11 +32,6 @@ class AdminNewOrdersFragment(user: FirebaseUser) : Fragment() {
     var userAddress:TextView? = null
     var btn_show:Button? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,11 +47,12 @@ class AdminNewOrdersFragment(user: FirebaseUser) : Fragment() {
     override fun onStart() {
         super.onStart()
         val options = FirebaseRecyclerOptions.Builder<AdminOrders>()
-            .setQuery(ordersRef.child("Orders"),AdminOrders::class.java)
+            .setQuery(ordersRef.child("Orders"),
+                AdminOrders::class.java)
             .setLifecycleOwner(this)
             .build()
 
-        val adapter = object : FirebaseRecyclerAdapter<AdminOrders,AdminOrderVH>(options){
+        val adapter = object : FirebaseRecyclerAdapter<AdminOrders, AdminOrderVH>(options){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminOrderVH {
                 val viewNewOrders = LayoutInflater.from(activity)
                     .inflate(R.layout.item_admin_orders,parent,false)

@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.fragments
+package com.canblack.commercewfirebase.ui.model
 
 class Cart {
     var pname:String = ""
@@ -8,9 +8,7 @@ class Cart {
     var discount:String = ""
     var curDate:String = ""
 
-    constructor():this(0.0,"","",0,"","") {
-
-    }
+    constructor():this(0.0,"","",0,"","")
 
 
     constructor(Price: Double, Name: String,Discount: String,Quantity:Int,Pid:String,CurDate:String){

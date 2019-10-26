@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.fragments;
+package com.canblack.commercewfirebase.ui.ViewHolder;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,19 +29,19 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
         switch (position) {
             case 0:
-                Picasso.get().load("https://images.pexels.com/photos/792199/pexels-photo-792199.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260").
+                Picasso.get().load("https://images.pexels.com/photos/792199/pexels-photo-792199.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=320&w=480").
                         into(viewHolder.imageViewBackground);
                 break;
             case 1:
-                Picasso.get().load("https://images.pexels.com/photos/2726370/pexels-photo-2726370.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260").
+                Picasso.get().load("https://images.pexels.com/photos/2726370/pexels-photo-2726370.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=320&w=480").
                         into(viewHolder.imageViewBackground);
                 break;
             case 2:
-                Picasso.get().load("https://images.pexels.com/photos/594452/pexels-photo-594452.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260").
+                Picasso.get().load("https://images.pexels.com/photos/594452/pexels-photo-594452.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=320&w=480").
                         into(viewHolder.imageViewBackground);
                 break;
             default:
-                Picasso.get().load("https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940").
+                Picasso.get().load("https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=320&w=480").
                         into(viewHolder.imageViewBackground);
                 break;
         }

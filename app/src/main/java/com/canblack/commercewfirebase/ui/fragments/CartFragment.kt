@@ -15,6 +15,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseUser
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.canblack.commercewfirebase.R
+import com.canblack.commercewfirebase.ui.ViewHolder.CartVH
+import com.canblack.commercewfirebase.ui.model.Cart
 import com.google.firebase.database.*
 
 
@@ -57,7 +59,7 @@ class CartFragment(user: FirebaseUser) : Fragment() {
             .setQuery(cartListRef.child("User View")
                 .child(cartUser.email!!.replace(".",",")).child("Products"), Cart::class.java).build()
 
-        val adapter = object : FirebaseRecyclerAdapter<Cart,CartVH>(optionss){
+        val adapter = object : FirebaseRecyclerAdapter<Cart, CartVH>(optionss){
 
             fun DelItem(pos:Int) {
                 snapshots.getSnapshot(pos).ref.removeValue()

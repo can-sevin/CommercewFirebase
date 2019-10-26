@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui
+package com.canblack.commercewfirebase.ui.model
 
 class Products {
     var name:String = ""
@@ -9,9 +9,7 @@ class Products {
     var desc:String = ""
     var cat:String = ""
 
-    constructor():this("","",0.0,0,"","") {
-
-    }
+    constructor():this("","",0.0,0,"","")
 
 
     constructor(Image: String, Name: String,Price:Double,Quantity:Int,Pid:String,Cat:String){

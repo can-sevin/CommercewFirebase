@@ -1,7 +1,5 @@
 package com.canblack.commercewfirebase.ui.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
@@ -14,9 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.User
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
@@ -34,10 +29,6 @@ class ConfirmFragment(total:Int,user:FirebaseUser) : Fragment() {
     var total = total
     var userConfirm : FirebaseUser = user
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +41,7 @@ class ConfirmFragment(total:Int,user:FirebaseUser) : Fragment() {
         btn_confirm = confirmView.findViewById(R.id.btn_confrimm)
         txt_total = confirmView.findViewById(R.id.txt_total_price_confirm)
 
-        txt_total.setText("Total Price: "+total.toString())
+        txt_total.text = "Total Price: "+total.toString()
 
         btn_confirm.setOnClickListener {
 

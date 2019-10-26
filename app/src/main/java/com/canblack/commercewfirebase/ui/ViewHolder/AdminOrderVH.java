@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.fragments;
+package com.canblack.commercewfirebase.ui.ViewHolder;
 
 import android.view.View;
 import android.widget.Button;
@@ -11,23 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.canblack.commercewfirebase.R;
 import com.canblack.commercewfirebase.ui.ItemClickListener;
 
-public class CartVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class AdminOrderVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txt_name,txt_price,txt_quantity,txt_wish_name,txt_wish_price;
+    public TextView txt_name,txt_price,txt_address,txt_date,txt_quantity;
     public ItemClickListener listener;
-    public Button btn_del,btn_wish_del,btn_wish_shop;
+    public Button btn_show;
 
-
-    public CartVH(@NonNull View itemView) {
+    public AdminOrderVH(@NonNull View itemView) {
         super(itemView);
-        txt_name = itemView.findViewById(R.id.txt_cart_product_name);
-        txt_price = itemView.findViewById(R.id.txt_cart_product_price);
-        txt_quantity = itemView.findViewById(R.id.txt_cart_product_quantity);
-        btn_del = itemView.findViewById(R.id.btn_del_cart);
-        txt_wish_name = itemView.findViewById(R.id.txt_wish_product_name);
-        txt_wish_price = itemView.findViewById(R.id.txt_wish_product_price);
-        btn_wish_del = itemView.findViewById(R.id.btn_del_wish);
-        btn_wish_shop = itemView.findViewById(R.id.btn_shop_wish);
+                txt_name = itemView.findViewById(R.id.txt_admin_orders_product_name);
+                txt_address = itemView.findViewById(R.id.txt_admin_orders_product_address);
+                txt_price = itemView.findViewById(R.id.txt_admin_orders_total_price);
+                txt_date = itemView.findViewById(R.id.txt_admin_orders_product_date);
+                btn_show = itemView.findViewById(R.id.btn_show_other_products);
     }
 
     public void setItemClickListener(ItemClickListener listner){

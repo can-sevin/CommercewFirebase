@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.canblack.commercewfirebase.R
+import com.canblack.commercewfirebase.ui.ViewHolder.CartVH
+import com.canblack.commercewfirebase.ui.model.Cart
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseUser
