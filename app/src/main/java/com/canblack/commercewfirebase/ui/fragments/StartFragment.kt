@@ -1,102 +1,83 @@
 package com.canblack.commercewfirebase.ui.fragments
 
-import android.content.Context
-import android.net.Uri
+import android.animation.ArgbEvaluator
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 import com.canblack.commercewfirebase.R
+import com.canblack.commercewfirebase.ui.MainActivity
+import com.canblack.commercewfirebase.ui.viewholder.ViewPager
+import com.canblack.commercewfirebase.ui.viewholder.ViewPagerVH
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [StartFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [StartFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class StartFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+
+    lateinit var models:List<ViewPager>
+    lateinit var adapter:ViewPagerVH
+    lateinit var viewPager:androidx.viewpager.widget.ViewPager
+    lateinit var colors:IntArray
+    lateinit var btnStart:Button
+    lateinit var argbEvaluator: ArgbEvaluator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        (models as ArrayList<ViewPager>).add(ViewPager("Sayfa 1",R.drawable.pager1))
+        (models as ArrayList<ViewPager>).add(ViewPager("Sayfa 2",R.drawable.pager2))
+        (models as ArrayList<ViewPager>).add(ViewPager("Sayfa 3",R.drawable.pager3))
+        (models as ArrayList<ViewPager>).add(ViewPager("Sayfa 4",R.drawable.pager4))
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_start, container, false)
-    }
+        val viewStart = inflater.inflate(R.layout.fragment_start, container, false)
+        adapter = ViewPagerVH(models,context!!)
+        viewPager = viewStart.findViewById(R.id.viewPager)
+        viewPager.adapter = adapter
+        viewPager.setPadding(130,0,130,0)
+        btnStart = viewStart.findViewById<Button>(R.id.btn_start)
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+        var colors_temp: () -> Int = {
+            resources.getColor(R.color.primaryTextColor)
+            resources.getColor(R.color.primaryTextColor)
+            resources.getColor(R.color.primaryTextColor)
+            resources.getColor(R.color.primaryTextColor)
         }
-    }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
+        btnStart.setOnClickListener {
+            val mainIntent = Intent(context, MainActivity::class.java)
+            startActivity(mainIntent)
+        }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StartFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            StartFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+/*
+        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                if(position < (adapter.count - 1) && position < (colors.size - 1)){
+                    viewPager.setBackgroundColor(
+                        argbEvaluator.evaluate(
+                            positionOffset,colors[position],colors[position + 1]
+                        ) as Int
+                    )
+                } else {
+                    viewPager.setBackgroundColor(colors[colors.size - 1])
                 }
             }
+            override fun onPageSelected(position: Int) {
+            }
+        })
+*/
+        return viewStart
     }
 }

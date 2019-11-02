@@ -9,13 +9,14 @@ import android.widget.*
 
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.MainActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.IsReadyToPayRequest
+import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.WalletConstants
 
 class RegisterFragment : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +30,7 @@ class RegisterFragment : Fragment() {
         val btn_register = viewRegister.findViewById<Button>(R.id.btn_register)
         val btn_log = viewRegister.findViewById<ImageView>(R.id.btn_log)
         val txt_forgot = viewRegister.findViewById<TextView>(R.id.txt_forgot)
+
 
         btn_log.setOnClickListener {
             val manager = activity!!.supportFragmentManager

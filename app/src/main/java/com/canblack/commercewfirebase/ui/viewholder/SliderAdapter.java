@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.ViewHolder;
+package com.canblack.commercewfirebase.ui.viewholder;
 
 import android.content.Context;
 import android.view.LayoutInflater;

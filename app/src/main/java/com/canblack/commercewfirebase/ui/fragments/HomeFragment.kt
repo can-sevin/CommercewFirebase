@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.ViewHolder.ProductVH
-import com.canblack.commercewfirebase.ui.ViewHolder.SliderAdapter
+import com.canblack.commercewfirebase.ui.viewholder.ProductVH
+import com.canblack.commercewfirebase.ui.viewholder.SliderAdapter
 import com.canblack.commercewfirebase.ui.model.Products
 import com.canblack.commercewfirebase.ui.model.User
 import com.firebase.ui.database.FirebaseRecyclerAdapter

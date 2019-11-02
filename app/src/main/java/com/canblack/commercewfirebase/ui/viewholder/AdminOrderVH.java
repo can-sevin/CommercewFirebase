@@ -1,4 +1,4 @@
-package com.canblack.commercewfirebase.ui.ViewHolder;
+package com.canblack.commercewfirebase.ui.viewholder;
 
 import android.view.View;
 import android.widget.Button;

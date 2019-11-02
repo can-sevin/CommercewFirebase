@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.ViewHolder.AdminOrderVH
+import com.canblack.commercewfirebase.ui.viewholder.AdminOrderVH
 import com.canblack.commercewfirebase.ui.model.AdminOrders
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions

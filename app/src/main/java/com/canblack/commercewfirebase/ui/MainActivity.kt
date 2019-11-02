@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canblack.commercewfirebase.R
-import com.canblack.commercewfirebase.ui.ViewHolder.ProductVH
+import com.canblack.commercewfirebase.ui.viewholder.ProductVH
 import com.canblack.commercewfirebase.ui.fragments.*
 import com.canblack.commercewfirebase.ui.model.Products
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             transaction.add(R.id.main_frame, LoginFragment(),"Login").commit()
         }
     }
-
 
     override fun onBackPressed() {
         when {
