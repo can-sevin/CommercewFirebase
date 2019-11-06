@@ -105,6 +105,16 @@
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_home_msg"
+        android:layout_width="wrap_content"
+        app:cardCornerRadius="30dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|center"
+        android:src="@drawable/ic_message_black_24dp" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_home_wish"
         android:layout_width="wrap_content"
         app:cardCornerRadius="30dp"

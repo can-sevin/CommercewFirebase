@@ -30,7 +30,7 @@ class WishFragment(user:FirebaseUser) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val viewWish = inflater.inflate(R.layout.fragment_wish, container, false)
-        re_wish = viewWish.findViewById(R.id.re_cartlist)
+        re_wish = viewWish.findViewById(R.id.re_wishlist)
         re_wish!!.layoutManager = re_layout
         re_wish!!.setHasFixedSize(true)
 

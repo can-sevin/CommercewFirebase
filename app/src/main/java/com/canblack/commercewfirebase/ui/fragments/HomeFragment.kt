@@ -55,6 +55,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         val btn_logout = viewHome.findViewById<ImageView>(R.id.btn_home_back)
         val txt_welcome = viewHome.findViewById<TextView>(R.id.txt_welcome)
         val btn_fav = viewHome.findViewById<FloatingActionButton>(R.id.btn_home_wish)
+        val btn_msg = viewHome.findViewById<FloatingActionButton>(R.id.btn_home_msg)
 
         re_new.setHasFixedSize(true)
         re_new.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -63,8 +64,7 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
         re_phone.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
 
-        sliderView.sliderAdapter =
-            SliderAdapter(context)
+        sliderView.sliderAdapter = SliderAdapter(context)
         sliderView.scrollTimeInSec = 4
         sliderView.startAutoCycle()
         sliderView.setIndicatorAnimation(IndicatorAnimations.SLIDE)
@@ -82,6 +82,9 @@ class HomeFragment(user: FirebaseUser) : Fragment() {
             .setLifecycleOwner(this)
             .build()
 
+        btn_msg.setOnClickListener {
+
+        }
 
         btn_fav.setOnClickListener {
             val manager = activity!!.supportFragmentManager
