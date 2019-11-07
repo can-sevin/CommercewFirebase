@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.viewholder.CartVH
 import com.canblack.commercewfirebase.ui.model.Cart
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 
 
 class CartFragment(user: FirebaseUser) : Fragment() {
@@ -41,8 +43,6 @@ class CartFragment(user: FirebaseUser) : Fragment() {
         re_cart = viewCart.findViewById(R.id.re_cartlist)
         re_cart!!.layoutManager = re_layout
         re_cart!!.setHasFixedSize(true)
-
-
         btn_next.setOnClickListener {
             val manager = activity!!.supportFragmentManager
             val transaction = manager.beginTransaction()
@@ -76,10 +76,11 @@ class CartFragment(user: FirebaseUser) : Fragment() {
                 p0.txt_quantity.text = "Quantity:"+p2.quantity
                 p0.txt_name.text = p2.pname
                 p0.txt_price.text = "Price:"+p2.price
+                Picasso.get().load(p2.pimg).into(p0.img_wish)
 
                 val oneProductPrice = p2.price *p2.quantity
 
-                totalPrice = totalPrice + oneProductPrice
+                totalPrice += oneProductPrice
                 txt_total_price!!.text = "Total Price:" + totalPrice
 
                 p0.btn_del.setOnClickListener {

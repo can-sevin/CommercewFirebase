@@ -21,11 +21,6 @@ class AddProductFragment(user: FirebaseUser,auth:FirebaseAuth) : Fragment() {
     var adminauth = auth
     var adminUser = user
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

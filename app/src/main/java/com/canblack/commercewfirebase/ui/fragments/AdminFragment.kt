@@ -15,10 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 
 class AdminFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +54,7 @@ class AdminFragment : Fragment() {
                 (activity as MainActivity).AdminRegister(edt_email.text.toString(),
                     edt_pass.text.toString(),edt_name.text.toString(),edt_phone.text.toString())
             else{
-                Toast.makeText(context, "Alanları eksiksiz doldurun!",
+                Toast.makeText(context, "Please fill the blank lines",
                     Toast.LENGTH_SHORT).show()
             }
         }

@@ -16,6 +16,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,6 +51,7 @@ class WishFragment(user:FirebaseUser) : Fragment() {
             override fun onBindViewHolder(p0: CartVH, p1: Int, p2: Cart) {
                 p0.txt_wish_name.text = p2.pname
                 p0.txt_wish_price.text = "Price:"+p2.price
+                Picasso.get().load(p2.pimg).into(p0.img_wish)
 
                 p0.btn_wish_del.setOnClickListener {
                     FirebaseDatabase.getInstance().reference.child("Wish list").child("User View")
@@ -71,6 +73,7 @@ class WishFragment(user:FirebaseUser) : Fragment() {
                     wishMap["price"] = p2.price
                     wishMap["quantity"] = p2.quantity
                     wishMap["curDate"] = currentDate
+                    wishMap["pimg"] = p2.pimg
                     wishMap["curTime"] = currentTime
                     wishMap["pid"] = p2.pid
                     wishMap["discount"] = ""

@@ -40,18 +40,17 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
     ): View? {
         val viewProduct = inflater.inflate(R.layout.fragment_product, container, false)
         val txt_name = viewProduct.findViewById<TextView>(R.id.txt_product_name)
-        txt_name.setText(pname)
+        txt_name.text = pname
         val txt_desc = viewProduct.findViewById<TextView>(R.id.txt_product_desc)
-        txt_desc.setText(pdesc)
+        txt_desc.text = pdesc
         val txt_price = viewProduct.findViewById<TextView>(R.id.txt_product_price)
-        txt_price.setText(pprice.toString())
+        txt_price.text = pprice.toString()
         val img = viewProduct.findViewById<ImageView>(R.id.product_img)
 
         val btn_like = viewProduct.findViewById<FloatingActionButton>(R.id.btn_like)
         val btn_basket = viewProduct.findViewById<FloatingActionButton>(R.id.btn_add_basket)
-        quantity = viewProduct.findViewById<ElegantNumberButton>(R.id.product_quantity)
+        quantity = viewProduct.findViewById(R.id.product_quantity)
         Picasso.get().load(pimg).into(img)
-
 
         btn_like.setOnClickListener {
             addToWishList()
@@ -59,7 +58,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
 
         btn_basket.setOnClickListener {
             addingToCardList()
-            if(state.equals("Order Placed") || state.equals("Order Shipped"))
+            if(state == "Order Placed" || state == "Order Shipped")
             {
                 Toast.makeText(context, "Your Order is shipped",
                     Toast.LENGTH_SHORT).show()
@@ -83,6 +82,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         wishMap["curDate"] = currentDate
         wishMap["curTime"] = currentTime
         wishMap["pid"] = ppid
+        wishMap["pimg"] = pimg
         wishMap["discount"] = ""
 
         val idemail = productUser.email!!.replace(".", ",")
@@ -109,6 +109,7 @@ class ProductFragment(name:String,price:Double,img:String ,desc:String,cat:Strin
         cartMap["curDate"] = currentDate
         cartMap["curTime"] = currentTime
         cartMap["pid"] = ppid
+        cartMap["pimg"] = pimg
         cartMap["discount"] = ""
 
         val idemail = productUser.email!!.replace(".", ",")

@@ -2,6 +2,7 @@ package com.canblack.commercewfirebase.ui.viewholder;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,8 +15,9 @@ import com.canblack.commercewfirebase.ui.ItemClickListener;
 public class CartVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView txt_name,txt_price,txt_quantity,txt_wish_name,txt_wish_price;
-    public ItemClickListener listener;
+    private ItemClickListener listener;
     public Button btn_del,btn_wish_del,btn_wish_shop;
+    public ImageView img_card,img_wish;
 
 
     public CartVH(@NonNull View itemView) {
@@ -24,6 +26,8 @@ public class CartVH extends RecyclerView.ViewHolder implements View.OnClickListe
         txt_price = itemView.findViewById(R.id.txt_cart_product_price);
         txt_quantity = itemView.findViewById(R.id.txt_cart_product_quantity);
         btn_del = itemView.findViewById(R.id.btn_del_cart);
+        img_wish = itemView.findViewById(R.id.img_wish_product);
+        img_card = itemView.findViewById(R.id.img_cart_product);
         txt_wish_name = itemView.findViewById(R.id.txt_wish_product_name);
         txt_wish_price = itemView.findViewById(R.id.txt_wish_product_price);
         btn_wish_del = itemView.findViewById(R.id.btn_del_wish);

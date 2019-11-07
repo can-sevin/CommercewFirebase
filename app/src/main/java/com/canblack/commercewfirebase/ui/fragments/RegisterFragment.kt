@@ -47,7 +47,7 @@ class RegisterFragment : Fragment() {
                 (activity as MainActivity).Register(edt_email.text.toString(),
                     edt_pass.text.toString(),edt_name.text.toString(),edt_phone.text.toString())
             else{
-                Toast.makeText(context, "Alanları eksiksiz doldurun!",
+                Toast.makeText(context, "Please fill the blank lines",
                     Toast.LENGTH_SHORT).show()
             }
         }

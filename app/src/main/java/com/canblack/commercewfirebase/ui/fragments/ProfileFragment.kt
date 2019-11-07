@@ -40,13 +40,13 @@ class ProfileFragment(user: FirebaseUser) : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val profileView = inflater.inflate(R.layout.fragment_profile, container, false)
-        var edt_name = profileView.findViewById<EditText>(R.id.edt_setting_name)
-        var edt_email = profileView.findViewById<EditText>(R.id.edt_setting_email)
-        var edt_phone = profileView.findViewById<EditText>(R.id.edt_setting_phone)
-        var edt_pass = profileView.findViewById<EditText>(R.id.edt_setting_pass)
-        var btn_save = profileView.findViewById<Button>(R.id.btn_save_setting)
-        var btn_back = profileView.findViewById<ImageView>(R.id.settings_btn_home_back)
-        var img = profileView.findViewById<CircleImageView>(R.id.setting_profile_image)
+        val edt_name = profileView.findViewById<EditText>(R.id.edt_setting_name)
+        val edt_email = profileView.findViewById<EditText>(R.id.edt_setting_email)
+        val edt_phone = profileView.findViewById<EditText>(R.id.edt_setting_phone)
+        val edt_pass = profileView.findViewById<EditText>(R.id.edt_setting_pass)
+        val btn_save = profileView.findViewById<Button>(R.id.btn_save_setting)
+        val btn_back = profileView.findViewById<ImageView>(R.id.settings_btn_home_back)
+        val img = profileView.findViewById<CircleImageView>(R.id.setting_profile_image)
 
 
         img.setOnClickListener {
@@ -125,7 +125,7 @@ class ProfileFragment(user: FirebaseUser) : Fragment() {
     }
 
     private fun userInfoDisplay(edtName: EditText?, edtEmail: EditText?, edtPass: EditText?, edtPhone: EditText?, img: CircleImageView?) {
-        var UsersRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileUser.email.toString().replace(".", ","))
+        val UsersRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileUser.email.toString().replace(".", ","))
         UsersRef.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
@@ -133,11 +133,11 @@ class ProfileFragment(user: FirebaseUser) : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     if(p0.child("image").exists()){
-                        var image = p0.child("image").value.toString()
-                        var name = p0.child("name").value.toString()
-                        var pass = p0.child("pass").value.toString()
-                        var email = p0.child("email").value.toString()
-                        var phone = p0.child("phone").value.toString()
+                        val image = p0.child("image").value.toString()
+                        val name = p0.child("name").value.toString()
+                        val pass = p0.child("pass").value.toString()
+                        val email = p0.child("email").value.toString()
+                        val phone = p0.child("phone").value.toString()
 
                         Picasso.get().load(image).into(img)
                         edtName!!.setText(name)

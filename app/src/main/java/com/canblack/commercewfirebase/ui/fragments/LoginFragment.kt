@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.canblack.commercewfirebase.R
 import com.canblack.commercewfirebase.ui.MainActivity
 import com.google.firebase.database.*
@@ -39,7 +40,13 @@ class LoginFragment : Fragment() {
         }
 
         btn_log.setOnClickListener {
-            (activity as MainActivity).Login(edt_email.text.toString(),edt_pass.text.toString())
+            if(edt_email.text.toString().isNotEmpty() || edt_pass.text.toString().isNotEmpty())
+            {
+                (activity as MainActivity).Login(edt_email.text.toString(),edt_pass.text.toString())
+            } else {
+                Toast.makeText(context, "Please fill the blank lines",
+                    Toast.LENGTH_SHORT).show()
+            }
         }
 
         txt_forgot.setOnClickListener {
